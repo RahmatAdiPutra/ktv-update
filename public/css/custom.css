@@ -1,0 +1,9 @@
+
+@font-face {
+    font-family: 'digital';
+    src: url('../fonts/digital/ds-digi.woff2') format('woff2'),
+         url('../fonts/digital/ds-digi.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}

@@ -1,0 +1,21 @@
+body {
+    background-color: #100e1f !important;
+    color: #fff !important;
+}
+
+#ktv-app {
+    height: 100%;
+}
+
+.ktv-app-wrapper {
+    height: 100%;
+}
+
+#app-song-browser {
+    background-color: #333;
+}
+
+#app-idle {
+    background: url(../../../storage/promotions/test.jpg) no-repeat center center;
+    background-size: cover;
+}
