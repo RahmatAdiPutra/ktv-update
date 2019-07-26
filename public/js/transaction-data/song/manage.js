@@ -55,7 +55,7 @@
         evt.preventDefault();
         clearForm();
         data.internal = table.row(this).data();
-        $video.append(`<video class="h-100 w-100" controls><source src="http://localhost/${data.internal.file_path}" type="video/mp4"></video>`);
+        $('video').attr('src', `http://localhost/${data.internal.file_path}`);
         $formSong.find('#title').val(data.internal.title);
         $formSong.find('#artist').val(data.internal.artist_label);
         getSpotify();
@@ -153,7 +153,6 @@
 
     function clearForm() {
         data = {};
-        $($video.children()).remove();
         $($('#spotifyTable tbody').children()).remove();
         $formSong.find('#title').val('');
         $formSong.find('#artist').val('');

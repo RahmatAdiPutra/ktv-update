@@ -22,7 +22,11 @@
             </div>
         </div>
         <div class="w-50 d-flex flex-column">
-            <div class="h-20 bg-master-lighter" id="video"></div>
+            <div class="h-20 bg-master-lighter" id="video">
+                <video class="h-100 w-100" controls>
+                    <source src="" type="video/mp4">
+                </video>
+            </div>
             <div class="h-80 d-flex flex-column">
                 <div class="m-1 notif"></div>
                 <div class="m-1 bg-master-lighter" id="form-song">
