@@ -120,15 +120,15 @@
                 artist.push(va.name);
             });
             var image = spotify.album.images.length ? spotify.album.images[0].url : '';
-            formData.append('title', spotify.name.toUpperCase());
-            formData.append('artist_label', artist.join(', ').toUpperCase());
+            formData.append('title', spotify.name);
+            formData.append('artist_label', artist.join(', '));
             formData.append('url_image', image);
             formData.append('code',spotify.uri);
         } else {
             var name = $formSong.find('#title').val();
             var artist_label = $formSong.find('#artist').val();
-            formData.append('title', name.toUpperCase());
-            formData.append('artist_label', artist_label.toUpperCase());
+            formData.append('title', name);
+            formData.append('artist_label', artist_label);
         }
 
         $.ajax({

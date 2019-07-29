@@ -56,7 +56,7 @@
                     $('tbody').append(`
                         <tr id="${k}">
                             <td class="align-middle text-center"><input type="radio" value="${v.name}" name="artist" id="${k}"></td>
-                            <td class="align-middle text-center">${v.name.toUpperCase()}</td>
+                            <td class="align-middle text-center">${v.name}</td>
                             <td class="align-middle text-center"><img src="${image}" widht=350 height=350></td>
                             <td class="align-middle text-center">${v.popularity}</td>
                             <td class="align-middle text-center">${v.followers.total}</td>
@@ -90,7 +90,7 @@
             var uri = spotify.uri;
             var popularity = spotify.popularity;
             formData.append('id', data.internal.id);
-            formData.append('name', name.toUpperCase());
+            formData.append('name', name);
             formData.append('url_image', image);
             formData.append('code',uri);
             formData.append('popularity',popularity);
