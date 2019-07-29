@@ -3,6 +3,10 @@
 @push('appHeader')
 @endpush
 @push('appFooter')
+<script>
+    window.dataSong = {!! json_encode($all) !!};
+    window.KTV_SERVER = 'http://<?php echo env('KTV_SERVER') ?>/';
+</script>
 <script src="{{asset('js/transaction-data/song/manage.js')}}" type="text/javascript"></script>
 @endpush
 @section('baseContent')
@@ -38,6 +42,11 @@
                     <div class="form-group">
                         <label>Artist</label>
                         <input type="text" name="artist" class="form-control" id="artist" placeholder="Artist" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <select name="song_genre_id" class="full-width" id="song_genre_id" data-init-plugin="select2" required>
+                        </select>
                     </div>
                 </div>
                 <div class="m-1 bg-master-lighter flex-grow-1 scrollable">

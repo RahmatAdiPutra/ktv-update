@@ -67,6 +67,10 @@ class SongController extends Controller
     {
         $data = [];
 
+        $data['genres'] = SongGenre::select('id', 'name')->orderBy('name')->get();
+
+        $data['all'] = $data;
+
         return $data;
     }
 

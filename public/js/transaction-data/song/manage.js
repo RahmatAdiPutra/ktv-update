@@ -63,9 +63,10 @@
         evt.preventDefault();
         clearForm();
         data.internal = table.row(this).data();
-        $('video').attr('src', `http://192.168.7.224/${data.internal.file_path}`);
+        $('video').attr('src', `${KTV_SERVER}${data.internal.file_path}`);
         $formSong.find('#title').val(data.internal.title);
         $formSong.find('#artist').val(data.internal.artist_label);
+        selectGenre(data.internal.song_genre_id);
         getSpotify();
     }
 
@@ -164,5 +165,21 @@
         $($('#spotifyTable tbody').children()).remove();
         $formSong.find('#title').val('');
         $formSong.find('#artist').val('');
+        selectGenre();
+    }
+
+    function selectGenre(val) {
+        var data = []
+        dataSong.genres.map(function(item, i) {
+            data[i] = {
+                id : item.id,
+                text : item.name
+            }
+        });
+        $('#song_genre_id').select2({
+            placeholder: "Select a genre",
+            data: data
+        });
+        $('#song_genre_id').val(val).trigger('change');
     }
 })(window);
