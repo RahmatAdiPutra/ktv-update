@@ -121,6 +121,7 @@
         if (typeof data.internal == 'undefined') { return false; }
         var formData = new FormData();
         var song = $("input[name='song']:checked");
+        var song_genre_id = $formSong.find('#song_genre_id').val();
         formData.append('id', data.internal.id);
         if (song.length) {
             var artist = [];
@@ -131,6 +132,7 @@
             var image = spotify.album.images.length ? spotify.album.images[0].url : '';
             formData.append('title', spotify.name);
             formData.append('artist_label', artist.join(', '));
+            formData.append('song_genre_id',song_genre_id);
             formData.append('url_image', image);
             formData.append('code',spotify.uri);
         } else {
@@ -138,6 +140,7 @@
             var artist_label = $formSong.find('#artist').val();
             formData.append('title', name);
             formData.append('artist_label', artist_label);
+            formData.append('song_genre_id',song_genre_id);
         }
 
         $.ajax({
