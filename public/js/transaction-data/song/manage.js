@@ -38,6 +38,14 @@
             {
                 data: "artist_label",
                 name: "artists"
+            },
+            {
+                orderable: false,
+                mRender: function (data, type, row) {
+                    return `
+                        ${row.cover_art ? '<i class="fa fa-check" aria-hidden="true" style="font-size:24px"></i>' : ''}
+                    `;
+                }
             }
         ]
     };
@@ -55,7 +63,7 @@
         evt.preventDefault();
         clearForm();
         data.internal = table.row(this).data();
-        $('video').attr('src', `http://localhost/${data.internal.file_path}`);
+        $('video').attr('src', `http://192.168.7.224/${data.internal.file_path}`);
         $formSong.find('#title').val(data.internal.title);
         $formSong.find('#artist').val(data.internal.artist_label);
         getSpotify();

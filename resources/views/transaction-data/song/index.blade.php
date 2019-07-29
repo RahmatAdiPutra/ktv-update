@@ -16,6 +16,7 @@
                             <th style="width: 5%;">No</th>
                             <th>Title</th>
                             <th>Artist</th>
+                            <th style="width: 20%;">Status Update</th>
                         </tr>
                     </thead>
                 </table>
