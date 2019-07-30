@@ -138,8 +138,8 @@
         } else {
             var name = $formSong.find('#title').val();
             var artist_label = $formSong.find('#artist').val();
-            formData.append('title', name);
-            formData.append('artist_label', artist_label);
+            formData.append('title', capitalizeWords(name));
+            formData.append('artist_label', capitalizeWords(artist_label));
             formData.append('song_genre_id',song_genre_id);
         }
 
@@ -184,5 +184,9 @@
             data: data
         });
         $('#song_genre_id').val(val).trigger('change');
+    }
+
+    function capitalizeWords(str) {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
 })(window);
