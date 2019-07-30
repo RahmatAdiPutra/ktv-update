@@ -156,7 +156,7 @@
             success: function (response) {
                 optionsNotif.message = response.payloads.message;
                 $('.notif').pgNotification(optionsNotif).show();
-                table.ajax.url(dataUrl).load();
+                table.ajax.reload(null, false);
                 clearForm();
             },
             error: function (response) {}
