@@ -77,6 +77,7 @@
             title:title,
             artist:artist,
         };
+        $($('#spotifyTable tbody').children()).remove();
         $.ajax({
             method: "GET",
             dataType: "json",
@@ -165,7 +166,6 @@
 
     function clearForm() {
         data = {};
-        $($('#spotifyTable tbody').children()).remove();
         $formSong.find('#title').val('');
         $formSong.find('#artist').val('');
         selectGenre();
