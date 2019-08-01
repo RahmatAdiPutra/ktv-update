@@ -64,7 +64,6 @@
         clearForm();
         data.internal = table.row(this).data();
         $('video').attr('src', `${KTV_SERVER}${data.internal.file_path}`);
-        $('video')[0].webkitRequestFullscreen();
         $formSong.find('#title').val(data.internal.title);
         $formSong.find('#artist').val(data.internal.artist_label);
         selectGenre(data.internal.song_genre_id);
