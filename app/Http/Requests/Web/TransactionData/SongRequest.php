@@ -38,6 +38,7 @@ class SongRequest extends FormRequest
             'file_path' => [],
             'volume' => [],
             'audio_channel' => [],
+            'release_year' => [],
             'updated_by' => []
         ];
     }

@@ -127,6 +127,7 @@
         if (song.length) {
             var artist = [];
             var spotify = data.spotify[song.attr('id')];
+            var release_year = spotify.album.release_date ? new Date(spotify.album.release_date) : '';
             spotify.artists.forEach((va,ka) => {
                 artist.push(va.name);
             });
@@ -136,6 +137,7 @@
             formData.append('song_genre_id',song_genre_id);
             formData.append('url_image', image);
             formData.append('code',spotify.uri);
+            formData.append('release_year',release_year.getFullYear());
         } else {
             var name = $formSong.find('#title').val();
             var artist_label = $formSong.find('#artist').val();
@@ -158,6 +160,7 @@
                 optionsNotif.message = response.payloads.message;
                 $('.notif').pgNotification(optionsNotif).show();
                 table.ajax.reload(null, false);
+                $($('#spotifyTable tbody').children()).remove();
                 clearForm();
             },
             error: function (response) {}
