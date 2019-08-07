@@ -18,26 +18,28 @@ class SongController extends Controller
 {
     public function test(Request $request)
     {
-        $spotify = new SpotifyController();
-        // $request->q = 'Nella Hip Hop Koplo';
-        // $request->type = 'album,artist,track';
-        $request->q = 'sellow';
-        $request->type = 'track';
-        // $request->market = 'ID';
-        $request->limit = 20;
-        // $request->offset = 0;
-        $search = $spotify->search($request);
-        // $artist = $spotify->artistAlbum($search['artists']['items'][0]['id']);
-        // $artistTrack = $spotify->artistTopTrack($search['artists']['items'][0]['id']);
-        // $album = $spotify->albumTrack("4l3fOJbOwczGU265TtMCrw");
-        // return $this->seed($search['artists']['items'][0]);
-        return $search;
-        // return $artist;
-        // return $album;
-        // return $artistTrack;
+        // $spotify = new SpotifyController();
+        // // $request->q = 'Nella Hip Hop Koplo';
+        // // $request->type = 'album,artist,track';
+        // $request->q = 'sellow';
+        // $request->type = 'track';
+        // // $request->market = 'ID';
+        // $request->limit = 20;
+        // // $request->offset = 0;
+        // $search = $spotify->search($request);
+        // // $artist = $spotify->artistAlbum($search['artists']['items'][0]['id']);
+        // // $artistTrack = $spotify->artistTopTrack($search['artists']['items'][0]['id']);
+        // // $album = $spotify->albumTrack("4l3fOJbOwczGU265TtMCrw");
+        // // return $this->seed($search['artists']['items'][0]);
+        // return $search;
+        // // return $artist;
+        // // return $album;
+        // // return $artistTrack;
 
-        // $singer = 'NIRWANA';
-        // return $spotify->filterTrack($search['tracks'],$singer);
+        // // $singer = 'NIRWANA';
+        // // return $spotify->filterTrack($search['tracks'],$singer);
+
+        return $this->autoUpdateCoverArt();
     }
 
     public function spotify(Request $request)
@@ -61,7 +63,6 @@ class SongController extends Controller
             return $this->responseSuccess(['message' => $e->getMessage()]);
         }
     }
-
 
     protected function layoutBase(Request $request)
     {
@@ -164,6 +165,46 @@ class SongController extends Controller
             return $this->responseSuccess(['message' => $message]);
         } catch (\Exception $e) {
             return $this->responseSuccess(['message' => $e->getMessage()]);
+        }
+    }
+
+    public function getSpotifyTrack($code)
+    {
+        $spotify = new SpotifyController();
+        $explode = explode(":", $code);
+        $id = array_pop($explode);
+        $search = $spotify->track($id);
+        return $search;
+    }
+
+    public function autoUpdateCoverArt()
+    {
+        $song = Song::select('id', 'code');
+        $song->whereNotNull('code');
+        $song->whereNull('cover_art');
+        $song = $song->inRandomOrder()->first();
+        $spotifyTrack = 'test';
+
+        if ($song) {
+            $spotifyTrack = $this->getSpotifyTrack($song->code);
+
+            $url_image = count($spotifyTrack['album']['images']) ? $spotifyTrack['album']['images'][0]['url'] : '';
+
+            if ($url_image) {
+                $url = $url_image;
+                $info = pathinfo($url);
+                $filename = 'uploads/songs/'.$info['filename'].'.jpg';
+                $file = file_get_contents($url);
+                $save = file_put_contents($filename, $file);
+
+                $update = Song::find($song->id);
+                $update->cover_art = $filename;
+                $update->save();
+
+                return 'Updated';
+            }
+        } else {
+            return 'Finish';
         }
     }
 }

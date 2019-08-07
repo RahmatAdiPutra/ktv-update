@@ -116,6 +116,19 @@ class SpotifyController extends Controller
         return json_decode($response, true);
     }
 
+    public function track($id)
+    {
+        $client = new \GuzzleHttp\Client();
+        $token = $this->token();
+        $authorization = 'Bearer '.$token['access_token'];
+        $response = $client->request('GET', 'https://api.spotify.com/v1/tracks/'.$id, [
+            'headers' => [
+                'Authorization' => $authorization
+            ]
+        ])->getBody()->getContents();
+        return json_decode($response, true);
+    }
+
     public function filterTrack($track, $singer)
     {
         $data = [];
