@@ -13,33 +13,32 @@ use App\Models\SongLanguage;
 use App\Models\Artist;
 use App\Models\ArtistCategory;
 use App\Models\Album;
+use Carbon\Carbon;
 
 class SongController extends Controller
 {
     public function test(Request $request)
     {
-        // $spotify = new SpotifyController();
-        // // $request->q = 'Nella Hip Hop Koplo';
-        // // $request->type = 'album,artist,track';
-        // $request->q = 'sellow';
-        // $request->type = 'track';
-        // // $request->market = 'ID';
-        // $request->limit = 20;
-        // // $request->offset = 0;
-        // $search = $spotify->search($request);
-        // // $artist = $spotify->artistAlbum($search['artists']['items'][0]['id']);
-        // // $artistTrack = $spotify->artistTopTrack($search['artists']['items'][0]['id']);
-        // // $album = $spotify->albumTrack("4l3fOJbOwczGU265TtMCrw");
-        // // return $this->seed($search['artists']['items'][0]);
-        // return $search;
-        // // return $artist;
-        // // return $album;
-        // // return $artistTrack;
+        $spotify = new SpotifyController();
+        // $request->q = 'Nella Hip Hop Koplo';
+        // $request->type = 'album,artist,track';
+        $request->q = 'sellow';
+        $request->type = 'track';
+        // $request->market = 'ID';
+        $request->limit = 20;
+        // $request->offset = 0;
+        $search = $spotify->search($request);
+        // $artist = $spotify->artistAlbum($search['artists']['items'][0]['id']);
+        // $artistTrack = $spotify->artistTopTrack($search['artists']['items'][0]['id']);
+        // $album = $spotify->albumTrack("4l3fOJbOwczGU265TtMCrw");
+        // return $this->seed($search['artists']['items'][0]);
+        return $search;
+        // return $artist;
+        // return $album;
+        // return $artistTrack;
 
-        // // $singer = 'NIRWANA';
-        // // return $spotify->filterTrack($search['tracks'],$singer);
-
-        return $this->autoUpdateCoverArt();
+        // $singer = 'NIRWANA';
+        // return $spotify->filterTrack($search['tracks'],$singer);
     }
 
     public function spotify(Request $request)
@@ -183,7 +182,6 @@ class SongController extends Controller
         $song->whereNotNull('code');
         $song->whereNull('cover_art');
         $song = $song->inRandomOrder()->first();
-        $spotifyTrack = 'test';
 
         if ($song) {
             $spotifyTrack = $this->getSpotifyTrack($song->code);
@@ -205,6 +203,32 @@ class SongController extends Controller
             }
         } else {
             return 'Finish';
+        }
+    }
+
+    public function autoUpdateReleaseYear()
+    {
+        $song = Song::select('id', 'code');
+        $song->whereNotNull('code');
+        $song->whereNull('release_year');
+        $song = $song->inRandomOrder()->first();
+
+        if ($song) {
+            $spotifyTrack = $this->getSpotifyTrack($song->code);
+
+            $release_date = $spotifyTrack['album']['release_date'];
+
+            if ($release_date) {
+                $date = new Carbon($release_date);
+                $update = Song::find($song->id);
+                $update->release_year = $date->year;
+                $update->save();
+
+                echo 'Updated '.$update->id;
+                echo "<meta http-equiv='refresh' content='0;url=http://localhost:8000/web/song/test'>";
+            }
+        } else {
+            echo 'Finish';
         }
     }
 }
