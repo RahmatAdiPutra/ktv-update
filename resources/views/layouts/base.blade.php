@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex-grow-1 d-flex flex-column justify-content-start align-items-center">
+        <div class="h-100 flex-grow-1 d-flex flex-column justify-content-start align-items-center">
             @yield('baseContent')
         </div>
     </div>
