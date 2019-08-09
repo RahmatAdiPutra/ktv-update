@@ -116,20 +116,21 @@
     }
 
     function skip() {
-        $.ajax({
-            method: "POST",
-            dataType: "json",
-            url: baseUrl + "web/artist",
-            data: {
-                id: data.internal.id
-            },
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function (response) {
-                getData();
-            },
-            error: function (response) {}
-        });
+        getData();
+        // $.ajax({
+        //     method: "POST",
+        //     dataType: "json",
+        //     url: baseUrl + "web/artist",
+        //     data: {
+        //         id: data.internal.id
+        //     },
+        //     headers: {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     },
+        //     success: function (response) {
+        //         getData();
+        //     },
+        //     error: function (response) {}
+        // });
     }
 })(window);
