@@ -65,12 +65,22 @@ class StatisticController extends Controller
     {
         $data = [];
 
+        // $points = \DB::select("
+        //     SELECT updated_by, artist, song, artist+song as total_point FROM (
+        //         SELECT updated_by, SUM(point_artist) as artist, SUM(point_song) as song FROM (
+        //             SELECT updated_by,count(*) as point_artist, 0 as point_song FROM artists where flag_check=1 group by updated_by
+        //             UNION 
+        //             SELECT updated_by, 0 as point_artist, count(*) as point_song from songs where code IS NOT NULL GROUP BY updated_by
+        //         ) t1 GROUP BY updated_by
+        //     ) t2 ORDER BY total_point DESC
+        // ");
+
         $points = \DB::select("
             SELECT updated_by, artist, song, artist+song as total_point FROM (
                 SELECT updated_by, SUM(point_artist) as artist, SUM(point_song) as song FROM (
-                    SELECT updated_by,count(*) as point_artist, 0 as point_song FROM artists where flag_check=1 group by updated_by
+                    SELECT updated_by,count(*) as point_artist, 0 as point_song FROM artists where updated_by IS NOT NULL group by updated_by
                     UNION 
-                    SELECT updated_by, 0 as point_artist, count(*) as point_song from songs where code IS NOT NULL GROUP BY updated_by
+                    SELECT updated_by, 0 as point_artist, count(*) as point_song from songs where updated_by IS NOT NULL GROUP BY updated_by
                 ) t1 GROUP BY updated_by
             ) t2 ORDER BY total_point DESC
         ");

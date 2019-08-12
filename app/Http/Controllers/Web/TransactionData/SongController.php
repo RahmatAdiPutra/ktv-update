@@ -138,13 +138,19 @@ class SongController extends Controller
     {
         // dd($request->all());
         try {
-            // $song = Song::find($request->id);
+            $song = Song::find($request->id);
 
-            // if ($song) {
-            //     $updatedBy = $song->updated_by;
-            // } else {
-            //     $updatedBy = Auth::user()->user_id;
-            // }
+            if ($song->updated_by) {
+                if ($song->cover_art) {
+                    $updatedBy = $song->updated_by;
+                } else {
+                    $updatedBy = Auth::user()->user_id;
+                }
+            } else {
+                $updatedBy = Auth::user()->user_id;
+            }
+
+            // $updatedBy = Auth::user()->user_id;
 
             if ($request->url_image) {
                 $url = $request->url_image;
@@ -153,12 +159,12 @@ class SongController extends Controller
                 $file = file_get_contents($url);
                 $save = file_put_contents($filename, $file);
             } else {
-                $filename = null;
+                $filename = $song->cover_art;
             }
 
             $request->merge([
                 'cover_art' => $filename,
-                'updated_by' => Auth::user()->user_id
+                'updated_by' => $updatedBy
             ]);
             
             if ($request->id) {
