@@ -138,6 +138,14 @@ class SongController extends Controller
     {
         // dd($request->all());
         try {
+            $song = Song::find($request->id);
+
+            if ($song) {
+                $updatedBy = $song->updated_by;
+            } else {
+                $updatedBy = Auth::user()->user_id;
+            }
+
             if ($request->url_image) {
                 $url = $request->url_image;
                 $info = pathinfo($url);
@@ -150,7 +158,7 @@ class SongController extends Controller
 
             $request->merge([
                 'cover_art' => $filename,
-                'updated_by' => Auth::user()->user_id
+                'updated_by' => $updatedBy
             ]);
             
             if ($request->id) {
