@@ -22,6 +22,7 @@
                         </tr>
                     </thead>
                     <tbody></tbody>
+                    <tfoot class="bg-white text-center"></tfoot>
                 </table>
             </div>
         </div>

@@ -14,7 +14,7 @@
             url: baseUrl + "web/statistic/data",
             success: function (response) {
                 console.log(response);
-                response.payloads.forEach((v,k) => {
+                response.payloads.data.forEach((v,k) => {
                     $('#statisticTable tbody').append(`
                         <tr>
                             <td class="align-middle text-center">${k+1}</td>
@@ -25,6 +25,15 @@
                         </tr>
                     `);
                 });
+
+                $('#statisticTable tfoot').append(`
+                    <tr>
+                        <th class="align-middle text-center" colspan="2">Total</th>
+                        <th class="align-middle text-center">${response.payloads.total.artist}</th>
+                        <th class="align-middle text-center">${response.payloads.total.song}</th>
+                        <th class="align-middle text-center">${response.payloads.total.total_point}</th>
+                    </tr>
+                `);
             },
             error: function (response) {}
         });

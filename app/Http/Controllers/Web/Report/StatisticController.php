@@ -89,13 +89,21 @@ class StatisticController extends Controller
         $users = User::select('user_id','first_name','last_name')->whereIn('user_id', $usersId)->get()->keyBy('user_id');
 
         foreach($points as $p) {
-            $data[] = [
+            $data['data'][] = [
                 'name' => $users[$p->updated_by]->first_name,
                 'artist' => $p->artist,
                 'song' => $p->song,
                 'total_point' => $p->total_point
             ];
         }
+
+        $dataCollect =collect($data['data']);
+
+        $data['total'] = [
+            'artist' => $dataCollect->sum('artist'),
+            'song' => $dataCollect->sum('song'),
+            'total_point' => $dataCollect->sum('total_point')
+        ];
 
         return $this->responseSuccess($data);
     }
