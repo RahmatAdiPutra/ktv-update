@@ -22,7 +22,7 @@ class SongController extends Controller
         $spotify = new SpotifyController();
         // $request->q = 'Nella Hip Hop Koplo';
         // $request->type = 'album,artist,track';
-        $request->q = 'sellow';
+        $request->q = '隨緣';
         $request->type = 'track';
         // $request->market = 'ID';
         $request->limit = 20;
@@ -106,6 +106,7 @@ class SongController extends Controller
         if (empty($searchTerm['value']) === false) {
             $q = '%' . str_replace(' ', '%', trim($searchTerm['value'])) . '%';
             $query->where('title', 'like', $q);
+            $query->orWhere('title_non_latin', 'like', $q);
             $query->orWhere('artist_label', 'like', $q);
         }
 
@@ -171,6 +172,20 @@ class SongController extends Controller
                 $message = 'Song has been updated';
             } else {
                 $message = 'Song has added';
+            }
+
+            // TODO cek lagu punya non latin? 
+            if($song->title_non_latin) {
+                $data = $request->only(array_keys($request->rules()));
+
+                // buang semua non alphabet
+                $judulLagu = preg_replace('/[a-z0-9 \/,\-\*\.\'\"\(\)\%\!\?]/i', '',$data['title']);
+                
+                if(empty($judulLagu) === false) {
+                    $data['title_non_latin'] = $data['title'];
+                    unset($data['title']);
+                }
+                // dd($judulLagu, $data);
             }
 
             $request->save($request->only(array_keys($request->rules())), $request->id);
