@@ -22,7 +22,7 @@ class SongController extends Controller
         $spotify = new SpotifyController();
         // $request->q = 'Nella Hip Hop Koplo';
         // $request->type = 'album,artist,track';
-        $request->q = '隨緣';
+        $request->q = 'sellow';
         $request->type = 'track';
         // $request->market = 'ID';
         $request->limit = 20;
