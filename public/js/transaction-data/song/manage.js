@@ -58,6 +58,17 @@
     $('#spotifyTable tbody').on('click', 'tr', checkedSong);
     $('#form-song div').on('change', 'input', getSpotify);
     $('#save-song').on("click", saveSong);
+    $('#jumppage').on('change', jumpToPage);
+
+    function jumpToPage(evt) {
+        evt.preventDefault();
+        var info = table.page.info();
+        var page = $('#jumppage').val();
+        if (page > 0 && page <= info.pages) {
+            page = page - 1;
+            table.page(parseInt(page)).draw(false);
+        }
+    }
 
     function selectSong(evt) {
         evt.preventDefault();
