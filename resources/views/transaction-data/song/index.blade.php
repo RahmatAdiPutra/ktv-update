@@ -13,8 +13,8 @@
 <div class="h-100 w-100 m-1 d-flex flex-column justify-content-center align-items-center bg-master-light">
     <div class="h-100 w-100 d-flex flex-row">
         <div class="w-50 d-flex flex-column">
-            <div>
-                Jump to page <input type="text" id="jumppage" min="0" size="2">
+            <div class="m-1">
+                Jump to page <input type="number" id="jumppage" min="1" style="width:50px;">
             </div>
             <div class="scrollable m-1">
                 <table class="table table-hover table-condensed" id="detailedTable">
