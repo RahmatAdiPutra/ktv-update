@@ -78,14 +78,16 @@
         $formSong.find('#title').val(data.internal.title);
         $formSong.find('#artist').val(data.internal.artist_label);
         selectGenre(data.internal.song_genre_id);
+        $formSong.find('#title_non_latin').val(data.internal.title_non_latin);
         getSpotify();
     }
 
     function getSpotify() {
         var title = $formSong.find('#title').val();
+        var latin = $formSong.find('#title_non_latin').val();
         var artist = $formSong.find('#artist').val();
         var formData = {
-            title:title,
+            title:latin ? latin : title,
             artist:artist,
         };
         $($('#spotifyTable tbody').children()).remove();

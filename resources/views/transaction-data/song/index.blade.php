@@ -38,18 +38,24 @@
             <div class="h-80 d-flex flex-column">
                 <div class="m-1 notif"></div>
                 <div class="m-1 bg-master-lighter" id="form-song">
-                    <div class="form-group">
-                        <label>Title</label>
-                        <input type="text" name="title" class="form-control" id="title" placeholder="Title" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Artist</label>
-                        <input type="text" name="artist" class="form-control" id="artist" placeholder="Artist" required>
+                    <div class="d-flex flex-row">
+                        <div class="w-50 form-group">
+                            <label>Title</label>
+                            <input type="text" name="title" class="form-control" id="title" placeholder="Title" required>
+                        </div>
+                        <div class="w-50 form-group">
+                            <label>Artist</label>
+                            <input type="text" name="artist" class="form-control" id="artist" placeholder="Artist" required>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Genre</label>
                         <select name="song_genre_id" class="full-width" id="song_genre_id" data-init-plugin="select2" required>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Title Non Latin</label>
+                        <input type="text" name="title_non_latin" class="form-control" id="title_non_latin" placeholder="Title Non Latin">
                     </div>
                 </div>
                 <div class="m-1 bg-master-lighter flex-grow-1 scrollable">
