@@ -182,10 +182,10 @@ class SongController extends Controller
                 // buang semua non alphabet
                 $judulLagu = preg_replace('/[a-z0-9 \/,\-\*\.\'\"\(\)\%\!\?]/i', '',$data['title']);
                 
-                // if(empty($judulLagu) === false) {
+                if(empty($judulLagu) === false) {
                     $data['title_non_latin'] = $data['title'];
                     unset($data['title']);
-                // }
+                }
                 // dd($judulLagu, $data);
             }
 
