@@ -184,6 +184,7 @@
         data = {};
         $formSong.find('#title').val('');
         $formSong.find('#artist').val('');
+        $formSong.find('#title_non_latin').val('');
         selectGenre();
     }
 
