@@ -174,21 +174,22 @@ class SongController extends Controller
                 $message = 'Song has added';
             }
 
+            $data = $request->only(array_keys($request->rules()));
+            
             // TODO cek lagu punya non latin? 
             if($song->title_non_latin) {
-                $data = $request->only(array_keys($request->rules()));
 
                 // buang semua non alphabet
                 $judulLagu = preg_replace('/[a-z0-9 \/,\-\*\.\'\"\(\)\%\!\?]/i', '',$data['title']);
                 
-                if(empty($judulLagu) === false) {
+                // if(empty($judulLagu) === false) {
                     $data['title_non_latin'] = $data['title'];
                     unset($data['title']);
-                }
+                // }
                 // dd($judulLagu, $data);
             }
 
-            $request->save($request->only(array_keys($request->rules())), $request->id);
+            $request->save($data, $request->id);
 
             return $this->responseSuccess(['message' => $message]);
         } catch (\Exception $e) {
