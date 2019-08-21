@@ -90,13 +90,13 @@
             title:latin ? latin : title,
             artist:artist,
         };
-        $($('#spotifyTable tbody').children()).remove();
         $.ajax({
             method: "GET",
             dataType: "json",
             url: baseUrl + "web/song/spotify",
             data: formData,
             success: function (response) {
+                $($('#spotifyTable tbody').children()).remove();
                 data.spotify = response.tracks ? response.tracks.items : response.payloads.tracks ? response.payloads.tracks.items : [];
                 data.spotify.forEach((v,k) => {
                     var artist = [];
