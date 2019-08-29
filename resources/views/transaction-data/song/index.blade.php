@@ -13,8 +13,19 @@
 <div class="h-100 w-100 m-1 d-flex flex-column justify-content-center align-items-center bg-master-light">
     <div class="h-100 w-100 d-flex flex-row">
         <div class="w-50 d-flex flex-column">
-            <div class="m-1">
-                Jump to page <input type="number" id="jumppage" min="1" style="width:50px;">
+            <div class="d-flex flex-row justify-content-between">
+                <div class="m-1">
+                    <div class="p-1">
+                        <label>Jump to page</label>
+                        <input type="number" id="jumppage" min="1" style="width:50px;">
+                    </div>
+                </div>
+                <div class="m-1">
+                    <div class="p-1">
+                        <label>Languages</label>
+                        <select name="language_id" id="language_id" data-init-plugin="select2" required></select>
+                    </div>
+                </div>
             </div>
             <div class="scrollable m-1">
                 <table class="table table-hover table-condensed" id="detailedTable">

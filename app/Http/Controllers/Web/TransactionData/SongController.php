@@ -67,6 +67,8 @@ class SongController extends Controller
     {
         $data = [];
 
+        $data['languages'] = SongLanguage::select('id', 'name')->orderBy('name')->get();
+
         $data['genres'] = SongGenre::select('id', 'name')->orderBy('name')->get();
 
         $data['all'] = $data;
@@ -108,6 +110,11 @@ class SongController extends Controller
             $query->where('title', 'like', $q);
             $query->orWhere('title_non_latin', 'like', $q);
             $query->orWhere('artist_label', 'like', $q);
+        }
+
+        $lang = $request->get('lang');
+        if (empty($lang) === false) {
+            $query->where('song_language_id', $lang);
         }
 
         // for get data total and last page,

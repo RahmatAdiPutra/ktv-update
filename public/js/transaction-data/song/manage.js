@@ -54,11 +54,14 @@
         $.extend(true, window.dataTableDefaultOptions, dataTableOptions)
     );
 
+    selectLanguage();
+
     $('#detailedTable tbody').on('click', 'tr', selectSong);
     $('#spotifyTable tbody').on('click', 'tr', checkedSong);
     $('#form-song div').on('change', 'input', getSpotify);
     $('#save-song').on("click", saveSong);
     $('#jumppage').on('change', jumpToPage);
+    $('#language_id').on('change', getLanguage);
 
     function jumpToPage(evt) {
         evt.preventDefault();
@@ -68,6 +71,11 @@
             page = page - 1;
             table.page(parseInt(page)).draw(false);
         }
+    }
+
+    function getLanguage(evt) {
+        evt.preventDefault();
+        table.ajax.url(dataUrl + '?lang=' + $('#language_id').val()).load();
     }
 
     function selectSong(evt) {
@@ -201,6 +209,23 @@
             data: data
         });
         $('#song_genre_id').val(val).trigger('change');
+    }
+
+    function selectLanguage() {
+        var data = []
+        dataSong.languages.map(function(item, i) {
+            data[i + 1] = {
+                id : item.id,
+                text : item.name
+            }
+        });
+        data[0] = {
+            id: '',
+            text: "All"
+        }
+        $('#language_id').select2({
+            data: data
+        });
     }
 
     function capitalizeWords(str) {
