@@ -121,7 +121,7 @@ class ArtistController extends Controller
                 $info = pathinfo($url);
                 $filename = 'uploads/artists/'.$info['filename'].'.jpg';
                 $file = file_get_contents($url);
-                $save = file_put_contents($filename, $file);
+                $save = file_put_contents(Setting::get('pathImage').$filename, $file);
                 $flag_check = 1;
             } else {
                 $filename = null;
@@ -146,5 +146,12 @@ class ArtistController extends Controller
         } catch (\Exception $e) {
             return $this->responseSuccess(['message' => $e->getMessage()]);
         }
+    }
+
+    public function destroy(Artist $artist)
+    {
+        unlink(Setting::get('pathImage').$artist->photo);
+        $artist->delete();
+        return $this->responseSuccess(['message' => 'Artist has been deleted']);
     }
 }

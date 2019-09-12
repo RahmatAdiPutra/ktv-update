@@ -52,6 +52,7 @@ Route::group([
         Route::get('/test', 'ArtistController@test')->name('test');
         Route::get('/{artist}', 'ArtistController@show')->name('show');
         Route::post('/', 'ArtistController@post')->name('post');
+        Route::delete('/{song}', 'ArtistController@destroy')->name('destroy');
     });
 });
 
