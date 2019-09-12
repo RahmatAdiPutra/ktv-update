@@ -100,6 +100,97 @@
         </div>
     </div>
 </div>
+<!-- MODAL FORM -->
+<div class="modal fade fill-in" id="modalFormSong" tabindex="-1" role="dialog" aria-labelledby="modalFormSongLabel"
+    aria-hidden="true">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close"></i></button>
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="text-left p-b-5"><span class="semi-bold">Song</span></h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <form method="POST" id="form-song-modal" enctype="multipart/form-data">
+                                    @csrf
+
+                                    <input type="text" name="id" class="form-control" id="id" hidden>
+
+                                    <div class="form-group">
+                                        <label>Genre</label>
+                                        <select name="genre_id" class="full-width" id="genre_id"
+                                            data-init-plugin="select2" required>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Language</label>
+                                        <select name="song_language_id" class="full-width" id="song_language_id"
+                                            data-init-plugin="select2" required>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input type="text" name="title" class="form-control" id="title"
+                                            placeholder="Title" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Title non latin</label>
+                                        <input type="text" name="title_non_latin" class="form-control"
+                                            id="title_non_latin" placeholder="Title non latin">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Artist Label</label>
+                                        <input type="text" name="artist_lab" class="form-control"
+                                            id="artist_lab" placeholder="Artist Label">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Type</label>
+                                        <select name="type" class="full-width" id="type" data-init-plugin="select2"
+                                            required>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Volume</label>
+                                        <input type="text" name="volume" class="form-control" id="volume"
+                                            placeholder="Volume" value="80" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Audio channel</label>
+                                        <select name="audio_channel" class="full-width" id="audio_channel"
+                                            data-init-plugin="select2" required>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button class="btn btn-dark" data-dismiss="modal"
+                                            aria-hidden="true">Cancel</button>
+                                        <button type="submit" class="btn btn-complete">Save</button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL FORM -->
 <!-- MODAL CONFIRM  -->
 <div class="modal fade stick-up" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="modalConfirmLabel" aria-hidden="true" data-id="">
     <div class="modal-dialog">

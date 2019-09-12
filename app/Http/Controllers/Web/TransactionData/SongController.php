@@ -72,6 +72,10 @@ class SongController extends Controller
 
         $data['genres'] = SongGenre::select('id', 'name')->orderBy('name')->get();
 
+        $data['type'] = ["karaoke","mp3","video"];
+
+        $data['audio'] = ["left","right","none"];
+
         $data['all'] = $data;
 
         return $data;
@@ -200,7 +204,8 @@ class SongController extends Controller
             }
 
             $data = $request->only(array_keys($request->rules()));
-            
+            // dd($data);
+
             // TODO cek lagu punya non latin? 
             if($song->title_non_latin) {
 

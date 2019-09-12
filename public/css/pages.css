@@ -9456,7 +9456,7 @@ select.full-width+.select2-container {
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
   padding-top: 5px;
-  z-index: 790;
+  z-index: 2000;
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
 }
 
@@ -9541,7 +9541,7 @@ select.full-width+.select2-container {
 }
 
 .modal-open .select2-container {
-  z-index: 1040;
+  z-index: 1050;
 }
 
 .modal-open .datepicker.dropdown-menu {

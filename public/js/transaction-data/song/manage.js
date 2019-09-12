@@ -3,6 +3,8 @@
 
     var $ = w.jQuery;
     var $formSong = $("#form-song");
+    var $formSongModal = $("#form-song-modal");
+    var $modalFormSong = $('#modalFormSong');
     var $video = $('#video');
     var baseUrl = $("base").attr("href");
     var dataUrl = baseUrl + "web/song/data";
@@ -52,12 +54,15 @@
                 mRender: function (data, type, row) {
                     if (window.userId === 1553) {
                         return `
+                            <a href="#" data-id="${row.id}" id="edit-song" data-target="#modalFormSong" data-toggle="modal">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size:24px"></i>
+                            </a>
                             <a href="#" data-id="${row.id}" id="delete-song" data-target="#modalConfirm" data-toggle="modal">
                             <i class="fa fa-trash-o" aria-hidden="true" style="font-size:24px;color:red"></i>
                             </a>
                         `;
                     } else {
-                        return '';
+                        return ``;
                     }
                 }
             }
@@ -71,7 +76,10 @@
     selectLanguage();
     selectCheckUpdated();
 
+    $formSongModal.on("submit", saveSongModal);
+
     $('#detailedTable tbody').on('click', 'tr', selectSong);
+    $('#detailedTable tbody').on('click', 'a[id="edit-song"]', editSong);
     $('#detailedTable tbody').on('click', 'a[id="delete-song"]', deleteSong);
     $('#spotifyTable tbody').on('click', 'tr', checkedSong);
     $('#form-song div').on('change', 'input', getSpotify);
@@ -166,6 +174,28 @@
         });
     }
 
+    function editSong(evt) {
+        var id = $(this).attr("data-id");
+        $.ajax({
+            method: "GET",
+            dataType: "json",
+            url: baseUrl + "web/song/" + id,
+            success: function (response) {
+                $modalFormSong.find('#id').val(response.payloads.id);
+                selectGenreForm(response.payloads.song_genre_id);
+                selectLanguageForm(response.payloads.song_language_id);
+                $modalFormSong.find('#title').val(response.payloads.title);
+                $modalFormSong.find('#title_non_latin').val(response.payloads.title_non_latin);
+                $modalFormSong.find('#artist_lab').val(response.payloads.artist_label);
+                selectType(response.payloads.type);
+                $modalFormSong.find('#volume').val(response.payloads.volume);
+                selectAudio(response.payloads.audio_channel);
+            },
+            error: function (response) {}
+        });
+        evt.preventDefault();
+    }
+
     function saveSong(evt) {
         evt.preventDefault();
         if (typeof data.internal == 'undefined') { return false; }
@@ -211,9 +241,43 @@
                 table.ajax.reload(null, false);
                 $($('#spotifyTable tbody').children()).remove();
                 clearForm();
+                clearFormSong();
             },
             error: function (response) {}
         });
+    }
+
+    function saveSongModal(evt) {
+        var formData = new FormData($formSongModal[0]);
+        formData.append('id',$('#id').val());
+        formData.append('song_genre_id',$('#song_genre_id').val());
+        formData.append('song_language_id',$('#song_language_id').val());
+        formData.append('title',$('#title').val());
+        formData.append('title_non_latin',$('#title_non_latin').val());
+        formData.append('artist_label',$('#artist_lab').val());
+        formData.append('type',$('#type').val());
+        formData.append('volume',$('#volume').val());
+        formData.append('audio_channel',$('#audio_channel').val());
+        $.ajax({
+            method: "POST",
+            dataType: "json",
+            url: baseUrl + "web/song",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                $(".modal").modal("hide");
+                optionsNotif.message = response.payloads.message;
+                $('.notif').pgNotification(optionsNotif).show();
+                table.ajax.reload(null, false);
+                $($('#spotifyTable tbody').children()).remove();
+                clearForm();
+                clearFormSong();
+            },
+            error: function (response) {}
+        });
+        evt.preventDefault();
+        return false;
     }
 
     function deleteSong(evt) {
@@ -239,6 +303,7 @@
                     table.ajax.reload(null, false);
                     $($('#spotifyTable tbody').children()).remove();
                     clearForm();
+                    clearFormSong();
                 },
                 error: function (response) {}
             });
@@ -253,6 +318,19 @@
         $formSong.find('#artist').val('');
         $formSong.find('#title_non_latin').val('');
         selectGenre();
+    }
+
+    function clearFormSong() {
+        $modalFormSong.find('#id').val("");
+        selectGenreForm();
+        selectLanguageForm();
+        $modalFormSong.find('#title').val("");
+        $modalFormSong.find('#title_non_latin').val("");
+        $modalFormSong.find('#artist_lab').val("");
+        selectType();
+        $modalFormSong.find('#volume').val("");
+        $modalFormSong.find('#file_song').val("");
+        selectAudio();
     }
 
     function selectGenre(val) {
@@ -270,6 +348,21 @@
         $('#song_genre_id').val(val).trigger('change');
     }
 
+    function selectGenreForm(val) {
+        var data = []
+        dataSong.genres.map(function(item, i) {
+            data[i] = {
+                id : item.id,
+                text : item.name
+            }
+        });
+        $('#genre_id').select2({
+            placeholder: "Select a genre",
+            data: data
+        });
+        $('#genre_id').val(val).trigger('change');
+    }
+
     function selectLanguage() {
         var data = []
         dataSong.languages.map(function(item, i) {
@@ -285,6 +378,49 @@
         $('#language_id').select2({
             data: data
         });
+    }
+
+    function selectLanguageForm(val) {
+        var data = []
+        dataSong.languages.map(function(item, i) {
+            data[i] = {
+                id : item.id,
+                text : item.name
+            }
+        });
+        $('#song_language_id').select2({
+            placeholder: "Select a language",
+            data: data
+        });
+        $('#song_language_id').val(val).trigger('change');
+    }
+
+    function selectType(val) {
+        var data = []
+        dataSong.type.map(function(item, i) {
+            data[i] = {
+                id : item,
+                text : item
+            }
+        });
+        $('#type').select2({
+            data: data
+        });
+        val ? $('#type').val(val).trigger('change') : '';
+    }
+
+    function selectAudio(val) {
+        var data = []
+        dataSong.audio.map(function(item, i) {
+            data[i] = {
+                id : item,
+                text : item
+            }
+        });
+        $('#audio_channel').select2({
+            data: data
+        });
+        val ? $('#audio_channel').val(val).trigger('change') : '';
     }
 
     function selectCheckUpdated() {
