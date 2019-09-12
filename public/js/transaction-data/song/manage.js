@@ -46,6 +46,20 @@
                         ${row.cover_art ? '<i class="fa fa-check" aria-hidden="true" style="font-size:24px"></i>' : ''}
                     `;
                 }
+            },
+            {
+                orderable: false,
+                mRender: function (data, type, row) {
+                    if (window.userId === 1553) {
+                        return `
+                            <a href="#" data-id="${row.id}" id="delete-song" data-target="#modalConfirm" data-toggle="modal">
+                            <i class="fa fa-trash-o" aria-hidden="true" style="font-size:24px;color:red"></i>
+                            </a>
+                        `;
+                    } else {
+                        return '';
+                    }
+                }
             }
         ]
     };
@@ -55,13 +69,17 @@
     );
 
     selectLanguage();
+    selectCheckUpdated();
 
     $('#detailedTable tbody').on('click', 'tr', selectSong);
+    $('#detailedTable tbody').on('click', 'a[id="delete-song"]', deleteSong);
     $('#spotifyTable tbody').on('click', 'tr', checkedSong);
     $('#form-song div').on('change', 'input', getSpotify);
     $('#save-song').on("click", saveSong);
+    $('#modalConfirm').on('click', 'button', confirm);
     $('#jumppage').on('change', jumpToPage);
-    $('#language_id').on('change', getLanguage);
+    $('#language_id').on('change', getFilter);
+    $('#check_updated').on('change', getFilter);
 
     function jumpToPage(evt) {
         evt.preventDefault();
@@ -73,9 +91,19 @@
         }
     }
 
-    function getLanguage(evt) {
+    function getFilter(evt) {
         evt.preventDefault();
-        table.ajax.url(dataUrl + '?lang=' + $('#language_id').val()).load();
+        var lang = $('#language_id').val();
+        var check = $('#check_updated').val();
+        if (check == 1) {
+            table.ajax.url(dataUrl + '?lang=' + lang + '&checkNotNull=' + check).load();
+        } else if (check == 2) {
+            table.ajax.url(dataUrl + '?lang=' + lang + '&checkNullCover=' + check).load();
+        } else if (check == 3) {
+            table.ajax.url(dataUrl + '?lang=' + lang + '&checkNull=' + check).load();
+        } else {
+            table.ajax.url(dataUrl + '?lang=' + lang).load();
+        }
     }
 
     function selectSong(evt) {
@@ -188,6 +216,37 @@
         });
     }
 
+    function deleteSong(evt) {
+        var id = $(this).attr("data-id");
+        $("#modalConfirm").data("id",id);
+        evt.preventDefault();
+    }
+
+    function confirm(evt) {
+        var id = $("#modalConfirm").data("id");
+        if ($(this).text() == 'Yes') {
+            $.ajax({
+                method: "DELETE",
+                dataType: "json",
+                url: baseUrl + "web/song/" + id,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    $(".modal").modal("hide");
+                    optionsNotif.message = response.payloads.message;
+                    $('.notif').pgNotification(optionsNotif).show();
+                    table.ajax.reload(null, false);
+                    $($('#spotifyTable tbody').children()).remove();
+                    clearForm();
+                },
+                error: function (response) {}
+            });
+        }
+        evt.preventDefault();
+        return false;
+    }
+
     function clearForm() {
         data = {};
         $formSong.find('#title').val('');
@@ -224,6 +283,30 @@
             text: "All"
         }
         $('#language_id').select2({
+            data: data
+        });
+    }
+
+    function selectCheckUpdated() {
+        var data = [
+            {
+                id: "",
+                text: "All"
+            },
+            {
+                id: 1,
+                text: "Updated"
+            },
+            {
+                id: 2,
+                text: "Updated Not Cover"
+            },
+            {
+                id: 3,
+                text: "Not Updated"
+            }
+        ]
+        $('#check_updated').select2({
             data: data
         });
     }

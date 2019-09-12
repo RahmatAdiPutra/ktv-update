@@ -14,6 +14,7 @@ use App\Models\Artist;
 use App\Models\ArtistCategory;
 use App\Models\Album;
 use Carbon\Carbon;
+use App\Models\Setting;
 
 class SongController extends Controller
 {
@@ -117,6 +118,23 @@ class SongController extends Controller
             $query->where('song_language_id', $lang);
         }
 
+        $checkNull = $request->get('checkNull');
+        if (empty($checkNull) === false) {
+            $query->whereNull('cover_art');
+            $query->whereNull('updated_by');
+        }
+
+        $checkNullCover = $request->get('checkNullCover');
+        if (empty($checkNullCover) === false) {
+            $query->whereNull('cover_art');
+            $query->whereNotNull('updated_by');
+        }
+
+        $checkNotNull = $request->get('checkNotNull');
+        if (empty($checkNotNull) === false) {
+            $query->whereNotNull('cover_art');
+        }
+
         // for get data total and last page,
         $paginate = $query->skip($start)
             ->paginate($limit)
@@ -165,7 +183,7 @@ class SongController extends Controller
                 $info = pathinfo($url);
                 $filename = 'uploads/songs/'.$info['filename'].'.jpg';
                 $file = file_get_contents($url);
-                $save = file_put_contents($filename, $file);
+                $save = file_put_contents(Setting::get('pathImage').$filename, $file);
             } else {
                 $filename = $song->cover_art;
             }
@@ -202,6 +220,13 @@ class SongController extends Controller
         } catch (\Exception $e) {
             return $this->responseSuccess(['message' => $e->getMessage()]);
         }
+    }
+
+    public function destroy(Song $song)
+    {
+        unlink(Setting::get('pathImage').$song->cover_art);
+        $song->delete();
+        return $this->responseSuccess(['message' => 'Song has been deleted']);
     }
 
     public function getSpotifyTrack($code)

@@ -4,6 +4,7 @@
 @endpush
 @push('appFooter')
 <script>
+    window.userId = {{ Auth::user()->user_id}};
     window.dataSong = {!! json_encode($all) !!};
     window.KTV_SERVER = 'http://<?php echo env('KTV_SERVER') ?>/';
 </script>
@@ -22,6 +23,12 @@
                 </div>
                 <div class="m-1">
                     <div class="p-1">
+                        <label>Status</label>
+                        <select name="check_updated" id="check_updated" data-init-plugin="select2" required></select>
+                    </div>
+                </div>
+                <div class="m-1">
+                    <div class="p-1">
                         <label>Languages</label>
                         <select name="language_id" id="language_id" data-init-plugin="select2" required></select>
                     </div>
@@ -31,10 +38,11 @@
                 <table class="table table-hover table-condensed" id="detailedTable">
                     <thead>
                         <tr>
-                            <th style="width: 5%;">No</th>
+                            <th style="width: 10%;">No</th>
                             <th>Title</th>
                             <th>Artist</th>
-                            <th style="width: 20%;">Status Update</th>
+                            <th style="width: 10%;">Status</th>
+                            <th style="width: 10%;">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -92,4 +100,26 @@
         </div>
     </div>
 </div>
+<!-- MODAL CONFIRM  -->
+<div class="modal fade stick-up" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="modalConfirmLabel" aria-hidden="true" data-id="">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header clearfix text-left">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="pg-close fs-14"></i>
+                </button>
+                <h5><span class="semi-bold">Are you sure, you want to delete ?</span></h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                  <button class="btn btn-dark" data-dismiss="modal" aria-hidden="true">No</button>
+                  <button class="btn btn-complete">Yes</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL CONFIRM  -->
 @endsection
