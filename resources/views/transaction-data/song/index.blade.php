@@ -3,8 +3,9 @@
 @push('appHeader')
 @endpush
 @push('appFooter')
+
 <script>
-    window.userId = {{ Auth::user()->user_id}};
+    window.ALLOW_EDIT = {{ in_array(auth()->id(), explode(',', env('ROLE_EDIT'))) }};
     window.dataSong = {!! json_encode($all) !!};
     window.KTV_SERVER = 'http://<?php echo env('KTV_SERVER') ?>/';
 </script>
@@ -115,67 +116,97 @@
                         <div class="card">
                             <div class="card-body">
 
-                                <form method="POST" id="form-song-modal" enctype="multipart/form-data">
+                                <form method="POST" id="form-song-modal" enctype="multipart/form-data" autocomplete="off">
                                     @csrf
 
                                     <input type="text" name="id" class="form-control" id="id" hidden>
 
-                                    <div class="form-group">
-                                        <label>Genre</label>
-                                        <select name="genre_id" class="full-width" id="genre_id"
-                                            data-init-plugin="select2" required>
-                                        </select>
-                                    </div>
+                                    <div class="d-flex flex-column">
 
-                                    <div class="form-group">
-                                        <label>Language</label>
-                                        <select name="song_language_id" class="full-width" id="song_language_id"
-                                            data-init-plugin="select2" required>
-                                        </select>
-                                    </div>
+                                    
+                                        <div class="d-flex flex-row">
 
-                                    <div class="form-group">
-                                        <label>Title</label>
-                                        <input type="text" name="title" class="form-control" id="title"
-                                            placeholder="Title" required>
-                                    </div>
+                                            <div class="form-group">
+                                                <label>Title</label>
+                                                <input type="text" name="title" class="form-control" id="title"
+                                                    placeholder="Title" required>
+                                            </div>
 
-                                    <div class="form-group">
-                                        <label>Title non latin</label>
-                                        <input type="text" name="title_non_latin" class="form-control"
-                                            id="title_non_latin" placeholder="Title non latin">
-                                    </div>
+                                            <div class="form-group">
+                                                <label>Title non latin</label>
+                                                <input type="text" name="title_non_latin" class="form-control"
+                                                    id="title_non_latin" placeholder="Title non latin">
+                                            </div>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label>Artist Label</label>
-                                        <input type="text" name="artist_lab" class="form-control"
-                                            id="artist_lab" placeholder="Artist Label">
-                                    </div>
+                                        <!-- <div class="d-flex flex-row"> -->
 
-                                    <div class="form-group">
-                                        <label>Type</label>
-                                        <select name="type" class="full-width" id="type" data-init-plugin="select2"
-                                            required>
-                                        </select>
-                                    </div>
+                                            <div class="form-group">
+                                                <label>Artist</label>
+                                                <select name="artist_id" multiple class="full-width" id="modal_artist_id"
+                                                    data-init-plugin="select2" required>
+                                                    @foreach($all['artists'] as $a) 
+                                                    <option value="{{ $a->id }}">{{ $a->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
 
-                                    <div class="form-group">
-                                        <label>Volume</label>
-                                        <input type="text" name="volume" class="form-control" id="volume"
-                                            placeholder="Volume" value="80" required>
-                                    </div>
+                                            <div class="form-group">
+                                                <label>Artist Label</label>
+                                                <input type="text" name="artist_lab" class="form-control"
+                                                    id="artist_lab" placeholder="Artist Label">
+                                            </div>
 
-                                    <div class="form-group">
-                                        <label>Audio channel</label>
-                                        <select name="audio_channel" class="full-width" id="audio_channel"
-                                            data-init-plugin="select2" required>
-                                        </select>
-                                    </div>
+                                        <!-- </div> -->
 
-                                    <div class="form-group">
-                                        <button class="btn btn-dark" data-dismiss="modal"
-                                            aria-hidden="true">Cancel</button>
-                                        <button type="submit" class="btn btn-complete">Save</button>
+                                        <div class="d-flex flex-row">
+
+                                            <div class="form-group">
+                                                <label>Genre</label>
+                                                <select name="genre_id" class="full-width" id="genre_id"
+                                                    data-init-plugin="select2" required>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Language</label>
+                                                <select name="song_language_id" class="full-width" id="song_language_id"
+                                                    data-init-plugin="select2" required>
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="d-flex flex-row">
+
+                                            <div class="form-group">
+                                                <label>Type</label>
+                                                <select name="type" class="full-width" id="type" data-init-plugin="select2"
+                                                    required>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Audio channel</label>
+                                                <select name="audio_channel" class="full-width" id="audio_channel"
+                                                    data-init-plugin="select2" required>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Volume</label>
+                                                <input type="text" name="volume" class="form-control" id="volume"
+                                                    placeholder="Volume" value="80" required>
+                                            </div>
+                                        
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button class="btn btn-dark" data-dismiss="modal"
+                                                aria-hidden="true">Cancel</button>
+                                            <button type="submit" class="btn btn-complete">Save</button>
+                                        </div>
+
                                     </div>
 
                                 </form>

@@ -6,9 +6,12 @@
     var $formSongModal = $("#form-song-modal");
     var $modalFormSong = $('#modalFormSong');
     var $video = $('#video');
+    var $modal_artist_id = $('#modal_artist_id');
     var baseUrl = $("base").attr("href");
     var dataUrl = baseUrl + "web/song/data";
     let data = {};
+
+    $modal_artist_id.select2();
 
     var optionsNotif = {
         style: 'bar',
@@ -52,7 +55,7 @@
             {
                 orderable: false,
                 mRender: function (data, type, row) {
-                    if (window.userId === 1553) {
+                    if (window.ALLOW_EDIT) {
                         return `
                             <a href="#" data-id="${row.id}" id="edit-song" data-target="#modalFormSong" data-toggle="modal">
                             <i class="fa fa-pencil-square-o" aria-hidden="true" style="font-size:24px"></i>
@@ -187,6 +190,7 @@
                 $modalFormSong.find('#title').val(response.payloads.title);
                 $modalFormSong.find('#title_non_latin').val(response.payloads.title_non_latin);
                 $modalFormSong.find('#artist_lab').val(response.payloads.artist_label);
+                selectArtist(response.payloads.artists);
                 selectType(response.payloads.type);
                 $modalFormSong.find('#volume').val(response.payloads.volume);
                 selectAudio(response.payloads.audio_channel);
@@ -331,6 +335,17 @@
         $modalFormSong.find('#volume').val("");
         $modalFormSong.find('#file_song').val("");
         selectAudio();
+    }
+
+    function selectArtist(artists) {
+        // hapus option yang sebelumnya terpilih
+        $modal_artist_id.find(':selected').attr('selected', false);
+        if(typeof artists === 'object' && artists.length > 0) {
+            artists.forEach((a) => {
+                $modal_artist_id.find('[value='+a.id+']').attr('selected', true);
+            });
+        }
+        $modal_artist_id.trigger('change');
     }
 
     function selectGenre(val) {
