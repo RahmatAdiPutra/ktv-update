@@ -334,18 +334,10 @@
     }
 
     function selectArtist(artists) {
-        // hapus option yang sebelumnya terpilih
-        var data = [];
         var selected = [];
-        dataSong.artists.map(function(item, i) {
-            data[i] = {
-                id : item.id,
-                text : item.name
-            }
-        });
         $('#artist_id').select2({
             placeholder: "Select a artist",
-            data: data
+            data: dataSong.artists
         });
         if(typeof artists === 'object' && artists.length > 0) {
             artists.forEach((a) => {
@@ -357,74 +349,39 @@
     }
 
     function selectGenre(val) {
-        var data = []
-        dataSong.genres.map(function(item, i) {
-            data[i] = {
-                id : item.id,
-                text : item.name
-            }
-        });
         $('#song_genre_id').select2({
             placeholder: "Select a genre",
-            data: data
+            data: dataSong.genres
         });
         $('#song_genre_id').val(val).trigger('change');
     }
 
     function selectGenreForm(val) {
-        var data = []
-        dataSong.genres.map(function(item, i) {
-            data[i] = {
-                id : item.id,
-                text : item.name
-            }
-        });
         $('#genre_id').select2({
             placeholder: "Select a genre",
-            data: data
+            data: dataSong.genres
         });
         $('#genre_id').val(val).trigger('change');
     }
 
     function selectLanguageForm(val) {
-        var data = []
-        dataSong.languages.map(function(item, i) {
-            data[i] = {
-                id : item.id,
-                text : item.name
-            }
-        });
         $('#song_language_id').select2({
             placeholder: "Select a language",
-            data: data
+            data: dataSong.languages
         });
         $('#song_language_id').val(val).trigger('change');
     }
 
     function selectType(val) {
-        var data = []
-        dataSong.type.map(function(item, i) {
-            data[i] = {
-                id : item,
-                text : item
-            }
-        });
         $('#type').select2({
-            data: data
+            data: dataSong.type
         });
         val ? $('#type').val(val).trigger('change') : '';
     }
 
     function selectAudio(val) {
-        var data = []
-        dataSong.audio.map(function(item, i) {
-            data[i] = {
-                id : item,
-                text : item
-            }
-        });
         $('#audio_channel').select2({
-            data: data
+            data: dataSong.audio
         });
         val ? $('#audio_channel').val(val).trigger('change') : '';
     }
@@ -434,7 +391,7 @@
         dataSong.languages.map(function(item, i) {
             data[i + 1] = {
                 id : item.id,
-                text : item.name
+                text : item.text
             }
         });
         data[0] = {

@@ -68,11 +68,11 @@ class SongController extends Controller
     {
         $data = [];
 
-        $data['artists'] = Artist::select('id', 'name')->orderBy('name')->get();
+        $data['artists'] = Artist::select('id', 'name as text')->orderBy('name')->get();
         
-        $data['languages'] = SongLanguage::select('id', 'name')->orderBy('name')->get();
+        $data['languages'] = SongLanguage::select('id', 'name as text')->orderBy('name')->get();
 
-        $data['genres'] = SongGenre::select('id', 'name')->orderBy('name')->get();
+        $data['genres'] = SongGenre::select('id', 'name as text')->orderBy('name')->get();
 
         $data['type'] = ["karaoke","mp3","video"];
 
