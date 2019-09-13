@@ -11,7 +11,7 @@
 |
 */
 
-\Auth::loginUsingId(1553, true);
+// \Auth::loginUsingId(1553, true);
 
 Route::get('/', function () {
     return redirect('/web/song');
