@@ -342,11 +342,14 @@
         // hapus option yang sebelumnya terpilih
         $modal_artist_id.find(':selected').attr('selected', false);
         if(typeof artists === 'object' && artists.length > 0) {
+            data.artist_label = [];
             artists.forEach((a) => {
                 $modal_artist_id.find('[value='+a.id+']').attr('selected', true);
+                data.artist_label.push(a.name);
             });
         }
         $modal_artist_id.trigger('change');
+        $("#artist_lab").val(data.artist_label.join(', '));
     }
 
     function selectGenre(val) {
