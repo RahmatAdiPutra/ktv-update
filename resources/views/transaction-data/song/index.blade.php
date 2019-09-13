@@ -38,11 +38,11 @@
                 <table class="table table-hover table-condensed" id="detailedTable">
                     <thead>
                         <tr>
-                            <th style="width: 10%;">No</th>
+                            <th style="width: 8%;">No</th>
                             <th>Title</th>
                             <th>Artist</th>
                             <th style="width: 10%;">Status</th>
-                            <th style="width: 10%;">Action</th>
+                            <th style="width: 20%;">Action</th>
                         </tr>
                     </thead>
                 </table>

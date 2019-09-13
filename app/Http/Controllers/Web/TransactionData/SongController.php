@@ -229,7 +229,9 @@ class SongController extends Controller
 
     public function destroy(Song $song)
     {
-        unlink(Setting::get('pathImage').$song->cover_art);
+        if ($song->cover_art) {
+            unlink(Setting::get('pathImage').$song->cover_art);
+        }
         $song->delete();
         return $this->responseSuccess(['message' => 'Song has been deleted']);
     }

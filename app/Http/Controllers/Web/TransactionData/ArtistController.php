@@ -150,7 +150,10 @@ class ArtistController extends Controller
 
     public function destroy(Artist $artist)
     {
-        unlink(Setting::get('pathImage').$artist->photo);
+        
+        if ($artist->photo) {
+            unlink(Setting::get('pathImage').$artist->photo);
+        }
         $artist->delete();
         return $this->responseSuccess(['message' => 'Artist has been deleted']);
     }

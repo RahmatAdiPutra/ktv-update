@@ -11,7 +11,7 @@
 |
 */
 
-// \Auth::loginUsingId(1553, true);
+\Auth::loginUsingId(1553, true);
 
 Route::get('/', function () {
     return redirect('/web/song');
@@ -52,7 +52,7 @@ Route::group([
         Route::get('/test', 'ArtistController@test')->name('test');
         Route::get('/{artist}', 'ArtistController@show')->name('show');
         Route::post('/', 'ArtistController@post')->name('post');
-        Route::delete('/{song}', 'ArtistController@destroy')->name('destroy');
+        Route::delete('/{artist}', 'ArtistController@destroy')->name('destroy');
     });
 });
 
