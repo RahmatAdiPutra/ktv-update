@@ -143,13 +143,8 @@
 
                                             <div class="form-group">
                                                 <label>Artist</label>
-                                                <select name="artist_id" multiple class="full-width" id="modal_artist_id"
-                                                    data-init-plugin="select2" required>
-                                                    @if(in_array(auth()->id(), explode(',', env('ROLE_EDIT'))) ? 1 : 0)
-                                                    @foreach($all['artists'] as $a) 
-                                                    <option value="{{ $a->id }}">{{ $a->name }}</option>
-                                                    @endforeach
-                                                    @endif
+                                                <select name="artist_id" multiple class="full-width" id="artist_id"
+                                                    data-init-plugin="select2">
                                                 </select>
                                             </div>
 

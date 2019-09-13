@@ -6,12 +6,9 @@
     var $formSongModal = $("#form-song-modal");
     var $modalFormSong = $('#modalFormSong');
     var $video = $('#video');
-    var $modal_artist_id = $('#modal_artist_id');
     var baseUrl = $("base").attr("href");
     var dataUrl = baseUrl + "web/song/data";
     let data = {};
-
-    $modal_artist_id.select2();
 
     var optionsNotif = {
         style: 'bar',
@@ -190,10 +187,10 @@
                 $modalFormSong.find('#title').val(response.payloads.title);
                 $modalFormSong.find('#title_non_latin').val(response.payloads.title_non_latin);
                 $modalFormSong.find('#artist_lab').val(response.payloads.artist_label);
-                selectArtist(response.payloads.artists);
                 selectType(response.payloads.type);
                 $modalFormSong.find('#volume').val(response.payloads.volume);
                 selectAudio(response.payloads.audio_channel);
+                // setTimeout(function(){ selectArtist(response.payloads.artists); }, 3000);
             },
             error: function (response) {}
         });
@@ -245,7 +242,6 @@
                 table.ajax.reload(null, false);
                 $($('#spotifyTable tbody').children()).remove();
                 clearForm();
-                clearFormSong();
             },
             error: function (response) {}
         });
@@ -258,7 +254,7 @@
         formData.append('song_language_id',$('#song_language_id').val());
         formData.append('title',$('#title').val());
         formData.append('title_non_latin',$('#title_non_latin').val());
-        formData.append('artist_id',$('#modal_artist_id').val());
+        formData.append('artist_id',$('#artist_id').val());
         formData.append('artist_label',$('#artist_lab').val());
         formData.append('type',$('#type').val());
         formData.append('volume',$('#volume').val());
@@ -276,7 +272,6 @@
                 $('.notif').pgNotification(optionsNotif).show();
                 table.ajax.reload(null, false);
                 $($('#spotifyTable tbody').children()).remove();
-                clearForm();
                 clearFormSong();
             },
             error: function (response) {}
@@ -322,34 +317,43 @@
         $formSong.find('#title').val('');
         $formSong.find('#artist').val('');
         $formSong.find('#title_non_latin').val('');
-        selectGenre();
+        $formSong.find('#song_genre_id').val("").trigger('change');
     }
 
     function clearFormSong() {
         $modalFormSong.find('#id').val("");
-        selectGenreForm();
-        selectLanguageForm();
+        $modalFormSong.find('#genre_id').val("").trigger('change');
+        $modalFormSong.find('#song_language_id').val("").trigger('change');
         $modalFormSong.find('#title').val("");
         $modalFormSong.find('#title_non_latin').val("");
+        $modalFormSong.find('#artist_id').val("").trigger('change');
         $modalFormSong.find('#artist_lab').val("");
-        selectType();
+        $modalFormSong.find('#type').val("").trigger('change');
         $modalFormSong.find('#volume').val("");
-        $modalFormSong.find('#file_song').val("");
-        selectAudio();
+        $modalFormSong.find('#audio_channel').val("").trigger('change');
     }
 
     function selectArtist(artists) {
         // hapus option yang sebelumnya terpilih
-        $modal_artist_id.find(':selected').attr('selected', false);
+        var data = [];
+        var selected = [];
+        dataSong.artists.map(function(item, i) {
+            data[i] = {
+                id : item.id,
+                text : item.name
+            }
+        });
+        $('#artist_id').select2({
+            placeholder: "Select a artist",
+            data: data
+        });
         if(typeof artists === 'object' && artists.length > 0) {
-            data.artist_label = [];
             artists.forEach((a) => {
-                $modal_artist_id.find('[value='+a.id+']').attr('selected', true);
-                data.artist_label.push(a.name);
+                selected.push(a.id);
+                
             });
         }
-        $modal_artist_id.trigger('change');
-        $("#artist_lab").val(data.artist_label.join(', '));
+        $('#artist_id').val(selected).trigger('change');
     }
 
     function selectGenre(val) {
@@ -380,23 +384,6 @@
             data: data
         });
         $('#genre_id').val(val).trigger('change');
-    }
-
-    function selectLanguage() {
-        var data = []
-        dataSong.languages.map(function(item, i) {
-            data[i + 1] = {
-                id : item.id,
-                text : item.name
-            }
-        });
-        data[0] = {
-            id: '',
-            text: "All"
-        }
-        $('#language_id').select2({
-            data: data
-        });
     }
 
     function selectLanguageForm(val) {
@@ -440,6 +427,23 @@
             data: data
         });
         val ? $('#audio_channel').val(val).trigger('change') : '';
+    }
+
+    function selectLanguage() {
+        var data = []
+        dataSong.languages.map(function(item, i) {
+            data[i + 1] = {
+                id : item.id,
+                text : item.name
+            }
+        });
+        data[0] = {
+            id: '',
+            text: "All"
+        }
+        $('#language_id').select2({
+            data: data
+        });
     }
 
     function selectCheckUpdated() {
