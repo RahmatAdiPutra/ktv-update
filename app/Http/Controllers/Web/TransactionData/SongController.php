@@ -172,6 +172,10 @@ class SongController extends Controller
         try {
             $song = Song::find($request->id);
 
+            if ($request->artist_id) {
+                $song->artists()->sync(explode(",", $request->artist_id));
+            }
+
             if ($song->updated_by) {
                 if ($song->cover_art) {
                     $updatedBy = $song->updated_by;

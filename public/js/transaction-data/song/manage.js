@@ -258,6 +258,7 @@
         formData.append('song_language_id',$('#song_language_id').val());
         formData.append('title',$('#title').val());
         formData.append('title_non_latin',$('#title_non_latin').val());
+        formData.append('artist_id',$('#modal_artist_id').val());
         formData.append('artist_label',$('#artist_lab').val());
         formData.append('type',$('#type').val());
         formData.append('volume',$('#volume').val());
