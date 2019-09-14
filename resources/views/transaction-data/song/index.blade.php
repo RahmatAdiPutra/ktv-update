@@ -144,14 +144,14 @@
                                             <div class="form-group">
                                                 <label>Artist</label>
                                                 <select name="artist_id" multiple class="full-width" id="artist_id"
-                                                    data-init-plugin="select2">
+                                                    data-init-plugin="select2" required>
                                                 </select>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Artist Label</label>
                                                 <input type="text" name="artist_lab" class="form-control"
-                                                    id="artist_lab" placeholder="Artist Label">
+                                                    id="artist_lab" placeholder="Artist Label" required>
                                             </div>
 
                                         <!-- </div> -->
