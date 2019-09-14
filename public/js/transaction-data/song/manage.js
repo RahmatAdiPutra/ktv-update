@@ -190,7 +190,7 @@
                 selectType(response.payloads.type);
                 $modalFormSong.find('#volume').val(response.payloads.volume);
                 selectAudio(response.payloads.audio_channel);
-                setTimeout(function(){ selectArtist(response.payloads.artists); }, 3000);
+                // setTimeout(function(){ selectArtist(response.payloads.artists); }, 3000);
             },
             error: function (response) {}
         });
