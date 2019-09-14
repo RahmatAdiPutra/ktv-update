@@ -76,6 +76,13 @@
     selectLanguage();
     selectCheckUpdated();
 
+    if (window.ALLOW_EDIT) {
+        $('#artist_id').select2({
+            placeholder: "Select a artist",
+            data: dataSong.artists
+        });
+    }
+
     $formSongModal.on("submit", saveSongModal);
 
     $('#detailedTable tbody').on('click', 'tr', selectSong);
@@ -117,6 +124,7 @@
     function selectSong(evt) {
         evt.preventDefault();
         clearForm();
+        clearFormSong();
         data.internal = table.row(this).data();
         $('video').attr('src', `${KTV_SERVER}${data.internal.file_path}`);
         $formSong.find('#title').val(data.internal.title);
@@ -181,6 +189,7 @@
             dataType: "json",
             url: baseUrl + "web/song/" + id,
             success: function (response) {
+                var selected = [];
                 $modalFormSong.find('#id').val(response.payloads.id);
                 selectGenreForm(response.payloads.song_genre_id);
                 selectLanguageForm(response.payloads.song_language_id);
@@ -190,7 +199,12 @@
                 selectType(response.payloads.type);
                 $modalFormSong.find('#volume').val(response.payloads.volume);
                 selectAudio(response.payloads.audio_channel);
-                // setTimeout(function(){ selectArtist(response.payloads.artists); }, 3000);
+                if(typeof response.payloads.artists === 'object' && response.payloads.artists.length > 0) {
+                    response.payloads.artists.forEach((v) => {
+                        selected.push(v.id);
+                    });
+                    setTimeout(function(){ selectArtist(selected); }, 3000);
+                }
             },
             error: function (response) {}
         });
@@ -250,7 +264,7 @@
     function saveSongModal(evt) {
         var formData = new FormData($formSongModal[0]);
         formData.append('id',$('#id').val());
-        formData.append('song_genre_id',$('#song_genre_id').val());
+        formData.append('song_genre_id',$('#genre_id').val());
         formData.append('song_language_id',$('#song_language_id').val());
         formData.append('title',$('#title').val());
         formData.append('title_non_latin',$('#title_non_latin').val());
@@ -334,18 +348,7 @@
     }
 
     function selectArtist(artists) {
-        var selected = [];
-        $('#artist_id').select2({
-            placeholder: "Select a artist",
-            data: dataSong.artists
-        });
-        if(typeof artists === 'object' && artists.length > 0) {
-            artists.forEach((a) => {
-                selected.push(a.id);
-                
-            });
-        }
-        $('#artist_id').val(selected).trigger('change');
+        $('#artist_id').val(artists).trigger('change');
     }
 
     function selectGenre(val) {
