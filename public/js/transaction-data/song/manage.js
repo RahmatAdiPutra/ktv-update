@@ -126,7 +126,7 @@
         clearForm();
         clearFormSong();
         var tb = table.cell( this ).index();
-        if (tb.column === 4) {
+        if (window.ALLOW_EDIT && tb.column === 4) {
             return;
         }
         data.internal = table.row(tb.row).data();
