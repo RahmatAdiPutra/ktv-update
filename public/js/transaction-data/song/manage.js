@@ -267,16 +267,16 @@
 
     function saveSongModal(evt) {
         var formData = new FormData($formSongModal[0]);
-        formData.append('id',$('#id').val());
-        formData.append('song_genre_id',$('#genre_id').val());
-        formData.append('song_language_id',$('#song_language_id').val());
-        formData.append('title',$('#title').val());
-        formData.append('title_non_latin',$('#title_non_latin').val());
-        formData.append('artist_id',$('#artist_id').val());
-        formData.append('artist_label',$('#artist_lab').val());
-        formData.append('type',$('#type').val());
-        formData.append('volume',$('#volume').val());
-        formData.append('audio_channel',$('#audio_channel').val());
+        formData.append('id',$modalFormSong.find('#id').val());
+        formData.append('song_genre_id',$modalFormSong.find('#genre_id').val());
+        formData.append('song_language_id',$modalFormSong.find('#song_language_id').val());
+        formData.append('title',$modalFormSong.find('#title').val());
+        formData.append('title_non_latin',$modalFormSong.find('#title_non_latin').val());
+        formData.append('artist_id',$modalFormSong.find('#artist_id').val());
+        formData.append('artist_label',$modalFormSong.find('#artist_lab').val());
+        formData.append('type',$modalFormSong.find('#type').val());
+        formData.append('volume',$modalFormSong.find('#volume').val());
+        formData.append('audio_channel',$modalFormSong.find('#audio_channel').val());
         $.ajax({
             method: "POST",
             dataType: "json",
