@@ -85,7 +85,7 @@
 
     $formSongModal.on("submit", saveSongModal);
 
-    $('#detailedTable tbody').on('click', 'tr', selectSong);
+    $('#detailedTable tbody').on('click', 'td', selectSong);
     $('#detailedTable tbody').on('click', 'a[id="edit-song"]', editSong);
     $('#detailedTable tbody').on('click', 'a[id="delete-song"]', deleteSong);
     $('#spotifyTable tbody').on('click', 'tr', checkedSong);
@@ -125,7 +125,11 @@
         evt.preventDefault();
         clearForm();
         clearFormSong();
-        data.internal = table.row(this).data();
+        var tb = table.cell( this ).index();
+        if (tb.column === 4) {
+            return;
+        }
+        data.internal = table.row(tb.row).data();
         $('video').attr('src', `${KTV_SERVER}${data.internal.file_path}`);
         $formSong.find('#title').val(data.internal.title);
         $formSong.find('#artist').val(data.internal.artist_label);
