@@ -195,14 +195,19 @@
             success: function (response) {
                 var selected = [];
                 $modalFormSong.find('#id').val(response.payloads.id);
-                selectGenreForm(response.payloads.song_genre_id);
-                selectLanguageForm(response.payloads.song_language_id);
                 $modalFormSong.find('#title').val(response.payloads.title);
                 $modalFormSong.find('#title_non_latin').val(response.payloads.title_non_latin);
                 $modalFormSong.find('#artist_lab').val(response.payloads.artist_label);
-                selectType(response.payloads.type);
                 $modalFormSong.find('#volume').val(response.payloads.volume);
+                selectGenreForm(response.payloads.song_genre_id);
+                selectLanguageForm(response.payloads.song_language_id);
+                selectType(response.payloads.type);
                 selectAudio(response.payloads.audio_channel);
+                if (response.payloads.is_new_song) {
+                    $modalFormSong.find('#is_new_song').attr('checked', true);
+                } else {
+                    $modalFormSong.find('#is_new_song').attr('checked', false);
+                }
                 if(typeof response.payloads.artists === 'object' && response.payloads.artists.length > 0) {
                     response.payloads.artists.forEach((v) => {
                         selected.push(v.id);
@@ -277,6 +282,7 @@
         formData.append('type',$modalFormSong.find('#type').val());
         formData.append('volume',$modalFormSong.find('#volume').val());
         formData.append('audio_channel',$modalFormSong.find('#audio_channel').val());
+        formData.append('is_new_song',$modalFormSong.find('#is_new_song').is(':checked') ? 1 : 0);
         $.ajax({
             method: "POST",
             dataType: "json",
@@ -349,6 +355,7 @@
         $modalFormSong.find('#type').val("").trigger('change');
         $modalFormSong.find('#volume').val("");
         $modalFormSong.find('#audio_channel').val("").trigger('change');
+        $modalFormSong.find('#is_new_song').removeAttr('checked');
     }
 
     function selectArtist(artists) {

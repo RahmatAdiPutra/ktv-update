@@ -165,26 +165,36 @@
 
                                     <div class="row">
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-6">
                                             <label>Type</label>
                                             <select name="type" class="full-width" id="type" data-init-plugin="select2" required></select>
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-6">
                                             <label>Audio channel</label>
                                             <select name="audio_channel" class="full-width" id="audio_channel" data-init-plugin="select2" required></select>
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="form-group col-md-6">
                                             <label>Volume</label>
                                             <input type="text" name="volume" class="form-control" id="volume" placeholder="Volume" value="80" required>
                                         </div>
 
+                                        <div class="checkbox check-success col-md-6 p-t-25">
+                                            <input type="checkbox" name="is_new_song" id="is_new_song">
+                                            <label for="is_new_song">New Song</label>
+                                        </div>
+
                                     </div>
+
                                     
                                     <div class="form-group">
-                                        <button class="btn btn-dark" data-dismiss="modal" aria-hidden="true">Cancel</button>
                                         <button type="submit" class="btn btn-complete">Save</button>
+                                        <button class="btn btn-dark" data-dismiss="modal" aria-hidden="true">Cancel</button>
                                     </div>
 
                                 </form>
