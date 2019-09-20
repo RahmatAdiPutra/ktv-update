@@ -13,7 +13,7 @@
 @section('baseContent')
 <div class="h-100 w-100 m-1 d-flex flex-column justify-content-center align-items-center bg-master-light">
     <div class="h-100 w-100 d-flex flex-row">
-        <div class="w-30 d-flex flex-column">
+        <div class="w-40 d-flex flex-column">
             <div class="m-1 scrollable">
                 <button class="btn btn-complete btn-cons" id='add-playlist' data-target='#modalFormPlaylist' data-toggle='modal'>
                     New Playlist
@@ -23,7 +23,7 @@
                 <table class="table table-hover table-condensed" id="tablePlaylist">
                     <thead>
                         <tr>
-                            <th style="width: 10%;">Delete</th>
+                            <th style="width: 15%;">Delete</th>
                             <th>Name</th>
                             <th>Category</th>
                             <th>Song</th>
@@ -69,7 +69,7 @@
                         <table class="table table-hover" id="tablePlaylistSong">
                             <thead class="text-center">
                                 <tr>
-                                    <th style="width: 10%;">Delete</th>
+                                    <th style="width: 15%;">Delete</th>
                                     <th>Title</th>
                                     <th>Artist</th>
                                 </tr>
@@ -84,12 +84,12 @@
                 </div>
             </div>
         </div>
-        <div class="w-40 d-flex flex-column">
+        <div class="w-30 d-flex flex-column">
             <div class="m-1 scrollable">
                 <table class="table table-hover table-condensed" id="tableSong">
                     <thead>
                         <tr>
-                            <th style="width: 10%;">Add</th>
+                            <th style="width: 15%;">Add</th>
                             <th>Title</th>
                             <th>Artist</th>
                         </tr>
