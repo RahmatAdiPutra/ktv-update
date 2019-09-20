@@ -38,6 +38,9 @@
                         <a class="nav-link" href="{{route('song.index')}}">Song</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{route('playlist.index')}}">Playlist</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{route('statistic.index')}}">Height Score</a>
                     </li>
                     <li class="nav-item">

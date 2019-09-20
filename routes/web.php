@@ -54,6 +54,16 @@ Route::group([
         Route::post('/', 'ArtistController@post')->name('post');
         Route::delete('/{artist}', 'ArtistController@destroy')->name('destroy');
     });
+
+    Route::group([
+        'prefix' => 'playlist',
+        'as' => 'playlist.',
+    ],function () {
+        Route::get('/', 'PlaylistController@index')->name('index');
+        Route::get('/data', 'PlaylistController@data')->name('data');
+        Route::post('/', 'PlaylistController@post')->name('post');
+        Route::delete('/{playlist}', 'PlaylistController@destroy')->name('destroy');
+    });
 });
 
 Route::group([
