@@ -15,11 +15,6 @@
     <div class="h-100 w-100 d-flex flex-row">
         <div class="w-40 d-flex flex-column">
             <div class="m-1 scrollable">
-                <button class="btn btn-complete btn-cons" id='add-playlist' data-target='#modalFormPlaylist' data-toggle='modal'>
-                    New Playlist
-                </button>
-            </div>
-            <div class="m-1 scrollable">
                 <table class="table table-hover table-condensed" id="tablePlaylist">
                     <thead>
                         <tr>

@@ -23,6 +23,7 @@
         order: [
             [1, 'asc']
         ],
+        dom: '<"toolbar">frtip',
         columns: [
             {
                 orderable: false,
@@ -120,11 +121,11 @@
 
     clearFormPlaylist()
 
-    // $('div.toolbar').html(
-    //     `<button class="btn btn-complete btn-cons" id='add-playlist' data-target='#modalFormPlaylist' data-toggle='modal'>
-    //         New Playlist
-    //     </button>`
-    // );
+    $('#tablePlaylist_wrapper div.toolbar').html(
+        `<button class="btn btn-complete btn-cons" id='add-playlist' data-target='#modalFormPlaylist' data-toggle='modal'>
+            New Playlist
+        </button>`
+    );
 
     $formPlaylistModal.on('submit', savePlaylist);
     $formPlaylistSong.on('submit', savePlaylistSong);
@@ -236,7 +237,7 @@
 
     function savePlaylistSong(event) {
         event.preventDefault();
-        var songs = $('#tablePlaylistSong tbody').sortable("toArray");
+        var songs = $('#tablePlaylistSong tbody').sortable('toArray');
         // data.playlists = tablePlaylistSong.rows().data().toArray();
         // console.log(songs);
         // console.log(data.playlists);
