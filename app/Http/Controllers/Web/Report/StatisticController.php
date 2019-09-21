@@ -85,12 +85,13 @@ class StatisticController extends Controller
             ) t2 ORDER BY total_point DESC
         ");
 
-        $usersId = collect($points)->pluck('updated_by');
-        $users = User::select('user_id','first_name','last_name')->whereIn('user_id', $usersId)->get()->keyBy('user_id');
+        // $usersId = collect($points)->pluck('updated_by');
+        // $users = User::select('user_id','first_name','last_name')->whereIn('user_id', $usersId)->get()->keyBy('user_id');
 
         foreach($points as $p) {
+            $users = User::select('user_id','first_name','last_name')->where('user_id', $p->updated_by)->first();
             $data['data'][] = [
-                'name' => $users[$p->updated_by]->first_name,
+                'name' => $users['first_name'],
                 'artist' => $p->artist,
                 'song' => $p->song,
                 'total_point' => $p->total_point
