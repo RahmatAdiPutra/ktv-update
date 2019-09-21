@@ -121,11 +121,11 @@
 
     clearFormPlaylist()
 
-    $('#tablePlaylist_wrapper div.toolbar').html(
-        `<button class="btn btn-complete btn-cons" id='add-playlist' data-target='#modalFormPlaylist' data-toggle='modal'>
-            New Playlist
-        </button>`
-    );
+    // $('#tablePlaylist_wrapper div.toolbar').html(
+    //     `<button class="btn btn-complete btn-cons" id='add-playlist' data-target='#modalFormPlaylist' data-toggle='modal'>
+    //         New Playlist
+    //     </button>`
+    // );
 
     $formPlaylistModal.on('submit', savePlaylist);
     $formPlaylistSong.on('submit', savePlaylistSong);

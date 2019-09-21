@@ -14,6 +14,11 @@
 <div class="h-100 w-100 m-1 d-flex flex-column justify-content-center align-items-center bg-master-light">
     <div class="h-100 w-100 d-flex flex-row">
         <div class="w-40 d-flex flex-column">
+            <div class="m-2 text-right">
+                <button class="btn btn-complete btn-cons" id='add-playlist' data-target='#modalFormPlaylist' data-toggle='modal'>
+                    New Playlist
+                </button>
+            </div>
             <div class="m-1 scrollable">
                 <table class="table table-hover table-condensed" id="tablePlaylist">
                     <thead>
@@ -73,7 +78,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="m-1 text-right">
+                <div class="m-1">
                     <button class="btn btn-complete btn-cons" id="save-playlist-song">Save</button>
                     <button class="btn btn-dark" id="clear-form-playlist">Cancel</button>
                 </div>
