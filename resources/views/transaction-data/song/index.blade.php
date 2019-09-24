@@ -6,7 +6,7 @@
 
 <script>
     window.dataSong = {!! json_encode($all) !!};
-    window.ALLOW_EDIT = {{ in_array(auth()->id(), explode(',', env('ROLE_EDIT'))) ? 1 : 0 }};
+    window.ALLOW_EDIT = {{ in_array(auth()->id(), explode(',', env('ROLE_EDIT'))) ? 0 : 1 }};
     window.KTV_SERVER = 'http://<?php echo env('KTV_SERVER') ?>/';
 </script>
 <script src="{{asset('js/transaction-data/song/manage.js')}}" type="text/javascript"></script>
