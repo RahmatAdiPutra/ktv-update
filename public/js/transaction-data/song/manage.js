@@ -76,13 +76,6 @@
     selectLanguage();
     selectCheckUpdated();
 
-    if (window.ALLOW_EDIT) {
-        $('#artist_id').select2({
-            placeholder: "Select a artist",
-            data: dataSong.artists
-        });
-    }
-
     $formSongModal.on("submit", saveSongModal);
 
     $('#detailedTable tbody').on('click', 'td', selectSong);
@@ -175,6 +168,29 @@
         });
     }
 
+    function getSelectArtist() {
+        $('#artist_id').select2({
+            minimumInputLength: 1,
+            allowClear: true,
+            placeholder: 'Search Artist',
+            ajax: {
+                dataType: 'json',
+                url: baseUrl + "web/artist/search",
+                delay: 800,
+                data: function(params) {
+                    return {
+                       name: params.term
+                    };
+                },
+                processResults: function (data, page) {
+                    return {
+                        results: data.payloads.artists
+                    };
+                },
+            }
+        });
+    }
+
     function checkedSong() {
         var id = $(this).attr('id');
         data.spotify.forEach((v,k) => {
@@ -193,7 +209,7 @@
             dataType: "json",
             url: baseUrl + "web/song/" + id,
             success: function (response) {
-                var selected = [];
+                getSelectArtist();
                 $modalFormSong.find('#id').val(response.payloads.id);
                 $modalFormSong.find('#title').val(response.payloads.title);
                 $modalFormSong.find('#title_non_latin').val(response.payloads.title_non_latin);
@@ -210,9 +226,15 @@
                 }
                 if(typeof response.payloads.artists === 'object' && response.payloads.artists.length > 0) {
                     response.payloads.artists.forEach((v) => {
-                        selected.push(v.id);
+                        var option = new Option(v.name, v.id, true, true);
+                        $('#artist_id').append(option).trigger('change');
+                        $('#artist_id').trigger({
+                            type: 'select2:select',
+                            params: {
+                                data: data
+                            }
+                        });
                     });
-                    setTimeout(function(){ selectArtist(selected); }, 3000);
                 }
             },
             error: function (response) {}
@@ -356,10 +378,6 @@
         $modalFormSong.find('#volume').val("");
         $modalFormSong.find('#audio_channel').val("").trigger('change');
         $modalFormSong.find('#is_new_song').removeAttr('checked');
-    }
-
-    function selectArtist(artists) {
-        $('#artist_id').val(artists).trigger('change');
     }
 
     function selectGenre(val) {

@@ -106,6 +106,25 @@ class ArtistController extends Controller
         return $this->responseSuccess($paginate);
     }
 
+    public function search(Request $request)
+    {
+        $data = [];
+
+        $artist = Artist::select('id', 'name as text')->orderBy('name');
+
+        if ($request->name) {
+            $artist->where('name', 'like', '%'.$request->name.'%');
+            $data['artists'] = $artist->take(25)->get();
+        } else if ($request->id) {
+            $data['artists'] = $artist->whereIn('id', $request->id)->get();
+        } else {
+            $data['artists'] = $artist->take(25)->get();
+        }
+
+        return $this->responseSuccess($data);
+        
+    }
+
     public function show(Artist $artist)
     {
         $artist->load('songs', 'albums', 'category', 'country', 'updatedBy');

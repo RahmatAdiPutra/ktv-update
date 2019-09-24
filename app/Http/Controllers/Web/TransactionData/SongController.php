@@ -67,8 +67,6 @@ class SongController extends Controller
     protected function layoutBase(Request $request)
     {
         $data = [];
-
-        $data['artists'] = Artist::select('id', 'name as text')->orderBy('name')->get();
         
         $data['languages'] = SongLanguage::select('id', 'name as text')->orderBy('name')->get();
 

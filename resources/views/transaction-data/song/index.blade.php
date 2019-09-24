@@ -137,7 +137,7 @@
 
                                     <div class="row">
 
-                                        <div class="form-group col-md-6">
+                                        <div class="artist form-group col-md-6">
                                             <label>Artist</label>
                                             <select name="artist_id" multiple class="full-width" id="artist_id" data-init-plugin="select2" required></select>
                                         </div>

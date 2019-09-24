@@ -50,6 +50,7 @@ Route::group([
         Route::get('/data', 'ArtistController@data')->name('data');
         Route::get('/spotify', 'ArtistController@spotify')->name('spotify');
         Route::get('/test', 'ArtistController@test')->name('test');
+        Route::get('/search', 'ArtistController@search')->name('search');
         Route::get('/{artist}', 'ArtistController@show')->name('show');
         Route::post('/', 'ArtistController@post')->name('post');
         Route::delete('/{artist}', 'ArtistController@destroy')->name('destroy');
