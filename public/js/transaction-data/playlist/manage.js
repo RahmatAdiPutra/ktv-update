@@ -204,7 +204,7 @@
         if (tb.column === 0) {
             tablePlaylistSong.row( tb.row ).remove().draw();
         }
-        if (typeof tablePlaylistSong.row( tb.row ).data() === 'undefined') {
+        if (typeof tablePlaylistSong.row().data() === 'undefined') {
             $($('#tablePlaylistSong tbody').children()).remove();
         }
     }
