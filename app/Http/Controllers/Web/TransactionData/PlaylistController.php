@@ -82,15 +82,17 @@ class PlaylistController extends Controller
                 if ($request->id) {
                     $songs = [];
                     $playlist = Playlist::find($request->id);
-                    foreach ($request->songs as $index => $songId) {
-                        $song = Song::find($songId);
-                        $songs[] =  [
-                            'song_id' => $song->id,
-                            'song_genre_id' => $song->song_genre_id,
-                            'song_language_id' => $song->song_language_id,
-                            'order_num' => $index+1,
-                            'playlist_category_id' => $playlist->playlist_category_id
-                        ];
+                    if (!empty($request->songs)) {
+                        foreach ($request->songs as $index => $songId) {
+                            $song = Song::find($songId);
+                            $songs[] =  [
+                                'song_id' => $song->id,
+                                'song_genre_id' => $song->song_genre_id,
+                                'song_language_id' => $song->song_language_id,
+                                'order_num' => $index+1,
+                                'playlist_category_id' => $playlist->playlist_category_id
+                            ];
+                        }
                     }
                     $playlist->songs()->sync($songs);
                     $message = 'Playlist has been updated';

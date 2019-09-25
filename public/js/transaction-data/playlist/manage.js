@@ -171,7 +171,9 @@
 
     function getPlaylist(songs) {
         data.playlists = songs;
-        tablePlaylistSong.clear().rows.add(data.playlists).draw();
+        if (data.playlists.length) {
+            tablePlaylistSong.clear().rows.add(data.playlists).draw();
+        }
     }
 
     function addSongToPlaylist(event) {
@@ -201,6 +203,9 @@
         var tb = tablePlaylistSong.cell( this ).index();
         if (tb.column === 0) {
             tablePlaylistSong.row( tb.row ).remove().draw();
+        }
+        if (typeof tablePlaylistSong.row( tb.row ).data() === 'undefined') {
+            $($('#tablePlaylistSong tbody').children()).remove();
         }
     }
 
@@ -238,10 +243,6 @@
     function savePlaylistSong(event) {
         event.preventDefault();
         var songs = $('#tablePlaylistSong tbody').sortable('toArray');
-        // data.playlists = tablePlaylistSong.rows().data().toArray();
-        // console.log(songs);
-        // console.log(data.playlists);
-        // return false;
         data.formData = {
             id: $formPlaylistSong.find('#id').val(),
             name: $formPlaylistSong.find('#name').val(),
