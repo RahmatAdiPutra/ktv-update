@@ -12,7 +12,7 @@ class ConvertController extends Controller
 {
     public function index(Request $request)
     {
-        $manuals = [];
+        $result = [];
         $filesInFolder = File::allFiles('/media/hdd2/new/Music/INDONESIA');
 
         $format = "mp4";
@@ -20,12 +20,11 @@ class ConvertController extends Controller
 
         foreach($filesInFolder as $path)
         {
-            $data = pathinfo($path);
-            $input = $data['dirname'].'/'.$data['basename'];
-            $output = $basepath.$data['filename'].".".$format;
-            $manuals[] = $output;
+            $pathinfo = pathinfo($path);
+            // $output = $basepath.$pathinfo['filename'].".".$format;
+            $result[] = $pathinfo['filename'];
         }
-        return $manuals;
+        return $result;
     }
 
     public function sample(Request $request)
