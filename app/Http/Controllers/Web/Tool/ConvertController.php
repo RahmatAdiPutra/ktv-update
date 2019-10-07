@@ -43,6 +43,7 @@ class ConvertController extends Controller
     public function searchFile($filepath, $filename) {
         // $search = File::glob('/home/cyber/public_html/new/*.*');
         // $search = File::glob('/home/cyber/public_html/*/A WHOLE NEW WORLD*');
-        return File::glob($filepath.$filename);
+        $search = File::glob($filepath.$filename);
+        return $search[0];
     }
 }
