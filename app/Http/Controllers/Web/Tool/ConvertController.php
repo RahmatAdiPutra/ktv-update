@@ -32,16 +32,16 @@ class ConvertController extends Controller
         $filename =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
         $pathinfo = pathinfo($songMap->file_name);
         $files = $this->searchFile($basepath, $filename . '*');
-        if (!empty($files)) {
+        // if (!empty($files)) {
 
-        } else {
-            $files = $this->searchFile($basepath, $pathinfo['filename'] . '*');
-            if (!empty($files)) {
+        // } else {
+        //     $files = $this->searchFile($basepath, $pathinfo['filename'] . '*');
+        //     if (!empty($files)) {
 
-            } else {
-                return 'step 1';
-            }
-        }
+        //     } else {
+        //         return 'step 1';
+        //     }
+        // }
 
         // 3
         $song = Song::select('*')->where('file_path', 'like', '%'.$pathinfo['filename'].'%')->first();
