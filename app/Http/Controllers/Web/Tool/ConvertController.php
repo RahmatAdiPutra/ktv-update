@@ -24,27 +24,24 @@ class ConvertController extends Controller
         */
         $songMap = SongMap::select('*')->first();
         $pathinfo = pathinfo($songMap->file_name);
+        $name =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
 
         // $search = File::glob('/home/cyber/public_html/new/*.*');
-        // $search = File::glob('/home/cyber/public_html/new/CALL YOU MINE#THE CHAINSMOKERS FT BEBE REXHA#BARAT#LEFT.mp4');
-        // return $search = $this->searchFile('/home/cyber/public_html', 'CALL YOU MINE#THE CHAINSMOKERS FT BEBE REXHA#BARAT#LEFT.mp4');
+        // $search = File::glob('/home/cyber/public_html/*/A WHOLE NEW WORLD*');
+        // $search = $this->searchFile('/home/*/*/*/', 'A WHOLE NEW WORLD*');
+        $search = $this->searchFile('/media/hdd2/new/Music/*/', $name . '*');
+        // $search = '';
 
         $song = Song::select('*')->where('file_path', 'like', '%'.$pathinfo['filename'].'%')->first();
 
         $filename = str_slug($songMap->description, '_');
-        dd($filename, $songMap->toArray(), $song->toArray());
+        dd($search, $name, $filename, $pathinfo, $songMap->toArray(), $song->toArray());
         // return $this->responseSuccess($data);
     }
 
     public function searchFile($filepath, $filename) {
-        $manuals = [];
-        $filesInFolder = File::allFiles($filepath);
-
-        foreach($filesInFolder as $path)
-        {
-            $data = pathinfo($path);
-            $manuals[] = $data;
-        }
-        return $manuals;
+        // $search = File::glob('/home/cyber/public_html/new/*.*');
+        // $search = File::glob('/home/cyber/public_html/*/A WHOLE NEW WORLD*');
+        return File::glob($filepath.$filename);
     }
 }
