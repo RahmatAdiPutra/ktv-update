@@ -63,6 +63,21 @@ return [
             ]) : [],
         ],
 
+        'dev' => [
+            'driver' => 'mysql',
+            'host' => env('DB_DEV_HOST', '127.0.0.1'),
+            'port' => env('DB_DEV_PORT', '3306'),
+            'database' => env('DB_DEV_DATABASE', 'forge'),
+            'username' => env('DB_DEV_USERNAME', 'forge'),
+            'password' => env('DB_DEV_PASSWORD', ''),
+            'unix_socket' => env('DB_DEV_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'neo' => [
             'driver' => 'mysql',
             'host' => env('DB_NEO_HOST', '127.0.0.1'),

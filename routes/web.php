@@ -81,3 +81,15 @@ Route::group([
         Route::get('/test', 'StatisticController@test')->name('test');
     });
 });
+
+Route::group([
+    'namespace' => 'Web\Tool',
+    'prefix' => 'web'
+],function () {
+    Route::group([
+        'prefix' => 'convert',
+        'as' => 'convert.',
+    ],function () {
+        Route::get('/', 'ConvertController@index')->name('index');
+    });
+});
