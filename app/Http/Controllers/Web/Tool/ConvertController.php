@@ -26,12 +26,12 @@ class ConvertController extends Controller
             // $output = $basepath.$pathinfo['filename'].".".$format;
             $exp = explode('#', $pathinfo['filename']);
             $title = Str::title($exp[0]);
-            // $artist = Str::title($exp[1]);
+            $artist = Str::title($exp[1]);
             // $language = Str::title($exp[2]);
             // $audio_channel = Str::lower($exp[3]);
             $result[] = [
                 'title' => $title,
-                // 'artist' => $artist,
+                'artist' => $artist,
                 // 'language' => $language,
                 // 'audio_channel' => $audio_channel
             ];
