@@ -29,7 +29,8 @@ class ConvertController extends Controller
         // $search = File::glob('/home/cyber/public_html/new/*.*');
         // $search = File::glob('/home/cyber/public_html/*/A WHOLE NEW WORLD*');
         // $search = $this->searchFile('/home/*/*/*/', 'A WHOLE NEW WORLD*');
-        $search = $this->searchFile('/media/hdd2/new/Music/*/', $name . '*');
+        // $search = $this->searchFile('/media/hdd2/new/Music/INDONESIA/', $name . '*');
+        $search = $this->searchFile('/media/hdd2/new/Music/*/', $pathinfo['filename'] . '*');
         // $search = '';
 
         $song = Song::select('*')->where('file_path', 'like', '%'.$pathinfo['filename'].'%')->first();
