@@ -24,21 +24,19 @@ class ConvertController extends Controller
         */
 
         // 1
-        $songMap = SongMap::select('*')->first();
+        // $songMap = SongMap::select('*')->first();
+        $songMap = SongMap::select('*')->inRandomOrder()->first();
 
         // 2
         $basepath = '/media/hdd2/new/Music/*/';
         $filename =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
         $pathinfo = pathinfo($songMap->file_name);
-
-        // $search = '';
-        // $search = $this->searchFile('/home/*/*/*/', 'A WHOLE NEW WORLD*');
-        $search = $this->searchFile($basepath, $filename . '*');
-        if (!empty($search)) {
+        $files = $this->searchFile($basepath, $filename . '*');
+        if (!empty($files)) {
 
         } else {
-            $search = $this->searchFile($basepath, $pathinfo['filename'] . '*');
-            if (!empty($search)) {
+            $files = $this->searchFile($basepath, $pathinfo['filename'] . '*');
+            if (!empty($files)) {
 
             } else {
                 return 'step 1';
@@ -49,7 +47,7 @@ class ConvertController extends Controller
         $song = Song::select('*')->where('file_path', 'like', '%'.$pathinfo['filename'].'%')->first();
 
         // $filename = str_slug($songMap->description, '_');
-        dd($songMap->toArray(), $search, $filename, $pathinfo, $song->toArray());
+        dd($songMap->toArray(), $files, $filename, $pathinfo, $song->toArray());
         // return $this->responseSuccess($data);
     }
 
