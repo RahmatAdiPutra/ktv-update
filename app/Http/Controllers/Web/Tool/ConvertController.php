@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tool\Song;
 use App\Models\Tool\SongMap;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class ConvertController extends Controller
 {
@@ -14,6 +15,7 @@ class ConvertController extends Controller
     {
         $result = [];
         $filesInFolder = File::allFiles('/media/hdd2/new/Music/INDONESIA');
+        // $filesInFolder = File::allFiles('/home/cyber/public_html/new');
 
         $format = "mp4";
         $basepath = "/media/hdd1/new/ind/";
@@ -22,10 +24,22 @@ class ConvertController extends Controller
         {
             $pathinfo = pathinfo($path);
             // $output = $basepath.$pathinfo['filename'].".".$format;
-            $result[] = $pathinfo['filename'];
+            $exp = explode('#', $pathinfo['filename']);
+            $title = Str::title($exp[0]);
+            $artist = Str::title($exp[1]);
+            $language = Str::title($exp[2]);
+            $audio_channel = Str::lower($exp[3]);
+            $result[] = [
+                'title' => $title,
+                'artist' => $artist,
+                'language' => $language,
+                'audio_channel' => $audio_channel
+            ];
         }
         return $result;
     }
+
+
 
     public function sample(Request $request)
     {
