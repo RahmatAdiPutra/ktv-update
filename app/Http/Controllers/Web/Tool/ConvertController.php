@@ -42,7 +42,6 @@ class ConvertController extends Controller
                 return 'step 1';
             }
         }
-        dd($files);
 
         // 3
         $song = Song::select('*')->where('file_path', 'like', '%'.$pathinfo['filename'].'%')->first();
