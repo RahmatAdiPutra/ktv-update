@@ -42,12 +42,13 @@ class ConvertController extends Controller
                 return 'step 1';
             }
         }
+        $pathinfonew = pathinfo($files[0]);
 
         // 3
         $song = Song::select('*')->where('file_path', 'like', '%'.$pathinfo['filename'].'%')->first();
 
-        // $filename = str_slug($songMap->description, '_');
-        dd($songMap->toArray(), $files, $filename, $pathinfo, $song->toArray());
+        // $filenamenew = str_slug($songMap->description, '_') . '-' . $songMap->singer . '-' . $songMap->language;;
+        dd($songMap->toArray(), $files, $filename, $pathinfo, $pathinfonew, $song->toArray());
         // return $this->responseSuccess($data);
     }
 
