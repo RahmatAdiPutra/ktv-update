@@ -16,21 +16,14 @@ class ConvertController extends Controller
         $filesInFolder = File::allFiles('/media/hdd2/new/Music/INDONESIA');
 
         $format = "mp4";
-        $basepath = "/media/hdd1/new";
+        $basepath = "/media/hdd1/new/ind/";
 
         foreach($filesInFolder as $path)
         {
             $data = pathinfo($path);
-            // if ($data['dirname'] == "/media/hdd2/new/Music/BARAT") {
-            //     $newpath = $basepath.'/eng/';
-            // }
-            // if ($data['dirname'] == "/media/hdd2/new/Music/INDONESIA") {
-                $newpath = $basepath.'/ind/';
-            // }
             $input = $data['dirname'].'/'.$data['basename'];
-            $output = $newpath.$data['filename'].".".$format;
-            $convert = "ffmpeg -i '".$input."' -qscale 0 '".$output."'";
-            $manuals[] = $convert;
+            $output = $basepath.$data['filename'].".".$format;
+            $manuals[] = $output;
         }
         return $manuals;
     }
