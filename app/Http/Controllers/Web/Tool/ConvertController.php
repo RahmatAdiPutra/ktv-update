@@ -33,7 +33,7 @@ class ConvertController extends Controller
         $filename =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
         $pathinfo = pathinfo($songMap->file_name);
         $files = $this->searchFile($basepath, $filename . '*');
-        dd($songMap->toArray(), $files);
+        dd($songMap->toArray(), $filename, $files);
         if (!empty($files)) {
 
         } else {
