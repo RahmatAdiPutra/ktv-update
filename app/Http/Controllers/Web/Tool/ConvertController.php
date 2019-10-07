@@ -25,7 +25,8 @@ class ConvertController extends Controller
 
         // 1
         // $songMap = SongMap::select('*')->first();
-        $songMap = SongMap::select('*')->inRandomOrder()->first();
+        // $songMap = SongMap::select('*')->inRandomOrder()->first();
+        $songMap = SongMap::select('*')->where('language', 'INDONESIAN')->inRandomOrder()->first();
 
         // 2
         $basepath = '/media/hdd2/new/Music/*/';
