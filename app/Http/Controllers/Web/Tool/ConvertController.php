@@ -13,7 +13,7 @@ class ConvertController extends Controller
     public function index(Request $request)
     {
         $manuals = [];
-        $filesInFolder = File::allFiles('/media/hdd2/new/Music');
+        $filesInFolder = File::allFiles('/media/hdd2/new/Music/INDONESIA');
 
         $format = "mp4";
         $basepath = "/media/hdd1/new";
@@ -21,12 +21,12 @@ class ConvertController extends Controller
         foreach($filesInFolder as $path)
         {
             $data = pathinfo($path);
-            if ($data['dirname'] == "/media/hdd2/new/Music/BARAT") {
-                $newpath = $basepath.'/eng/';
-            }
-            if ($data['dirname'] == "/media/hdd2/new/Music/INDONESIA") {
+            // if ($data['dirname'] == "/media/hdd2/new/Music/BARAT") {
+            //     $newpath = $basepath.'/eng/';
+            // }
+            // if ($data['dirname'] == "/media/hdd2/new/Music/INDONESIA") {
                 $newpath = $basepath.'/ind/';
-            }
+            // }
             $input = $data['dirname'].'/'.$data['basename'];
             $output = $newpath.$data['filename'].".".$format;
             $convert = "ffmpeg -i '".$input."' -qscale 0 '".$output."'";
