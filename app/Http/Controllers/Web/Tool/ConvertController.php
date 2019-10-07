@@ -12,6 +12,31 @@ class ConvertController extends Controller
 {
     public function index(Request $request)
     {
+        $manuals = [];
+        $filesInFolder = File::allFiles('/media/hdd2/new/Music');
+
+        $format = "mp4";
+        $basepath = "/media/hdd1/new";
+
+        foreach($filesInFolder as $path)
+        {
+            $data = pathinfo($path);
+            if ($data['dirname'] == "/media/hdd2/new/Music/BARAT") {
+                $newpath = $basepath.'/eng/';
+            }
+            if ($data['dirname'] == "/media/hdd2/new/Music/INDONESIA") {
+                $newpath = $basepath.'/ind/';
+            }
+            $input = $data['dirname'].'/'.$data['basename'];
+            $output = $newpath.$data['filename'].".".$format;
+            $convert = "ffmpeg -i '".$input."' -qscale 0 '".$output."'";
+            $manuals[] = $convert;
+        }
+        return $manuals;
+    }
+
+    public function sample(Request $request)
+    {
         /*
         1. ambil satu baris data tabel song_maps di database 192.168.70.64
         2. cek file di server 192.168.7.224
