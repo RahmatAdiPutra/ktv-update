@@ -29,7 +29,7 @@ class ConvertController extends Controller
         $songMap = SongMap::select('*')->where('language', 'INDONESIAN')->inRandomOrder()->first();
 
         // 2
-        $basepath = '/media/hdd2/new/Music/*/';
+        $basepath = '/media/hdd2/new/Music/INDONESIA/';
         $filename =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
         $pathinfo = pathinfo($songMap->file_name);
         $files = $this->searchFile($basepath, $filename . '*');
