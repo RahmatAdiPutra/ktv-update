@@ -48,6 +48,11 @@ class ConvertController extends Controller
 
         // 3
         $song = Song::select('*')->where('file_path', 'like', '%'.$pathinfo['filename'].'%')->first();
+        if (!empty($song)) {
+
+        } else {
+            return 'tambah baru';
+        }
 
         // $filenamenew = str_slug($songMap->description, '_') . '-' . $songMap->singer . '-' . $songMap->language;;
         dd($songMap->toArray(), $files, $filename, $pathinfo, $uri_tail, $pathinfonew, $song->toArray());
