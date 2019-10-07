@@ -47,7 +47,7 @@ class ConvertController extends Controller
         $song = Song::select('*')->where('file_path', 'like', '%'.$pathinfo['filename'].'%')->first();
 
         // $filename = str_slug($songMap->description, '_');
-        dd($songMap->toArray(), $files, $filename, $pathinfo, $song->toArray());
+        dd($songMap->toArray(), $files->toArray(), $filename, $pathinfo, $song->toArray());
         // return $this->responseSuccess($data);
     }
 
