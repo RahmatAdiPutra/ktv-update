@@ -22,28 +22,41 @@ class ConvertController extends Controller
            - jika tidak ada, tambah baru
         4. rename file video di server 192.168.7.224
         */
+
+        // 1
         $songMap = SongMap::select('*')->first();
+
+        // 2
+        $basepath = '/media/hdd2/new/Music/*/';
+        $filename =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
         $pathinfo = pathinfo($songMap->file_name);
-        $name =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
 
-        // $search = File::glob('/home/cyber/public_html/new/*.*');
-        // $search = File::glob('/home/cyber/public_html/*/A WHOLE NEW WORLD*');
-        // $search = $this->searchFile('/home/*/*/*/', 'A WHOLE NEW WORLD*');
-        // $search = $this->searchFile('/media/hdd2/new/Music/INDONESIA/', $name . '*');
-        $search = $this->searchFile('/media/hdd2/new/Music/*/', $pathinfo['filename'] . '*');
         // $search = '';
+        // $search = $this->searchFile('/home/*/*/*/', 'A WHOLE NEW WORLD*');
+        $search = $this->searchFile($basepath, $filename . '*');
+        if (!empty($search)) {
 
+        } else {
+            $search = $this->searchFile($basepath, $pathinfo['filename'] . '*');
+            if (!empty($search)) {
+
+            } else {
+                return 'step 1';
+            }
+        }
+
+        // 3
         $song = Song::select('*')->where('file_path', 'like', '%'.$pathinfo['filename'].'%')->first();
 
-        $filename = str_slug($songMap->description, '_');
-        dd($search, $name, $filename, $pathinfo, $songMap->toArray(), $song->toArray());
+        // $filename = str_slug($songMap->description, '_');
+        dd($songMap->toArray(), $search, $filename, $pathinfo, $song->toArray());
         // return $this->responseSuccess($data);
     }
 
     public function searchFile($filepath, $filename) {
-        // $search = File::glob('/home/cyber/public_html/new/*.*');
-        // $search = File::glob('/home/cyber/public_html/*/A WHOLE NEW WORLD*');
-        $search = File::glob($filepath.$filename);
-        return $search[0];
+        // $file = File::glob('/home/cyber/public_html/new/*.*');
+        // $file = File::glob('/home/cyber/public_html/*/A WHOLE NEW WORLD*');
+        $file = File::glob($filepath.$filename);
+        return $file;
     }
 }
