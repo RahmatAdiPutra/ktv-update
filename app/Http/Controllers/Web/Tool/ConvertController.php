@@ -120,8 +120,8 @@ class ConvertController extends Controller
 
         // 2
         $basepath = '/media/hdd2/new/Music/INDONESIA/';
-        $filename =  preg_replace("/\((.*?)\)/","",$songMap->description) . '#' . $songMap->singer;
-        $filename1 =  preg_replace("/\((.*?)\)/","",$songMap->description);
+        $filename =  preg_replace("/\s\((.*?)\)/","",$songMap->description) . '#' . $songMap->singer;
+        $filename1 =  preg_replace("/\s\((.*?)\)/","",$songMap->description);
         $files = $this->searchFile($basepath . $filename . '*');
         $files1 = $this->searchFile($basepath . $filename1 . '*');
         $pathinfo = pathinfo($songMap->file_name);
