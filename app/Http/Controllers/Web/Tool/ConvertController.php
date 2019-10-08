@@ -13,17 +13,27 @@ class ConvertController extends Controller
 {
     public function index(Request $request)
     {
-        $result = [];
-        $filesInFolder = File::allFiles('/media/hdd2/new/Music/INDONESIA');
-        // $filesInFolder = File::allFiles('/home/cyber/public_html/new');
-
+        $draft = '/home/aman/test.sql';
+        $path = '/media/hdd2/new/Music/INDONESIA';
+        // $draft = '/home/cyber/Workdir/test.sql';
+        // $path = '/home/cyber/public_html/new';
+        $basepath = "hdd1/new/ind/";
         $format = "mp4";
-        $basepath = "/media/hdd1/new/ind/";
+        $filepath = $this->getFilepath($path, $basepath, $format);
+        File::put($draft, implode("\n", $filepath));
+        return 'Sukses';
+    }
+
+    public function getFilepath($path, $basepath, $format)
+    {
+        $data = [];
+        $filesInFolder = File::allFiles($path);
+        $date = date('Y-m-d H:i:s');
 
         foreach($filesInFolder as $path)
         {
             $pathinfo = pathinfo($path);
-            // $output = $basepath.$pathinfo['filename'].".".$format;
+            $file_path = $basepath.$pathinfo['filename'].".".$format;
             $exp = explode('#', $pathinfo['filename']);
             $title = Str::title($exp[0]);
             if (count($exp) > 1) {
@@ -31,19 +41,10 @@ class ConvertController extends Controller
             } else {
                 $artist = '';
             }
-            // $language = Str::title($exp[2]);
-            // $audio_channel = Str::lower($exp[3]);
-            $result[] = [
-                'title' => $title,
-                'artist' => $artist,
-                // 'language' => $language,
-                // 'audio_channel' => $audio_channel
-            ];
+            $data[] = "INSERT INTO `ktv_v1`.`songs` (`song_genre_id`, `song_language_id`, `title`, `artist_label`, `file_path`, `created_at` , `updated_at`) VALUES (4, 1, \"$title\", \"$artist\", \"$file_path\", \"$date\", \"$date\");";
         }
-        return $result;
+        return $data;
     }
-
-
 
     public function sample(Request $request)
     {
