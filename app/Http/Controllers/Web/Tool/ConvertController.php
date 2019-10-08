@@ -120,10 +120,9 @@ class ConvertController extends Controller
 
         // 2
         $basepath = '/media/hdd2/new/Music/INDONESIA/';
-        // $filename =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
-        $filename =  $songMap->description;
-        $pathinfo = pathinfo($songMap->file_name);
+        $filename =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
         $files = $this->searchFile($basepath . $filename . '*');
+        $pathinfo = pathinfo($songMap->file_name);
         dd($songMap->toArray(), $filename, $files);
         if (!empty($files)) {
 
