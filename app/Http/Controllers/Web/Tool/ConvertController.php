@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class ConvertController extends Controller
 {
-    public function index(Request $request)
+    public function sample(Request $request)
     {
         $draft = '/home/aman/convert/test.sql';
         $newname = '/home/aman/convert/newname.sh';
@@ -100,7 +100,7 @@ class ConvertController extends Controller
         return $data;
     }
 
-    public function sample(Request $request)
+    public function index(Request $request)
     {
         /*
         1. ambil satu baris data tabel song_maps di database 192.168.70.64
@@ -120,10 +120,11 @@ class ConvertController extends Controller
 
         // 2
         $basepath = '/media/hdd2/new/Music/INDONESIA/';
-        $filename =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
+        // $filename =  $songMap->description . '#' . $songMap->singer . '#' . $songMap->language;
+        $filename =  $songMap->description;
         $pathinfo = pathinfo($songMap->file_name);
-        $files = $this->searchFile($basepath, $filename . '*');
-        dd($songMap->toArray(), $filename.'*', $files);
+        $files = $this->searchFile($basepath . $filename . '*');
+        dd($songMap->toArray(), $filename, $files);
         if (!empty($files)) {
 
         } else {
@@ -151,10 +152,10 @@ class ConvertController extends Controller
         // return $this->responseSuccess($data);
     }
 
-    public function searchFile($filepath, $filename) {
+    public function searchFile($filepath) {
         // $file = File::glob('/home/cyber/public_html/new/*.*');
         // $file = File::glob('/home/cyber/public_html/*/A WHOLE NEW WORLD*');
-        $file = File::glob($filepath.$filename);
+        $file = File::glob($filepath);
         return $file;
     }
 }
