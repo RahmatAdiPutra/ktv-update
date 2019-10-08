@@ -13,7 +13,7 @@ class ConvertController extends Controller
 {
     public function index(Request $request)
     {
-        $draft = '/home/aman/test.sql';
+        $draft = '/home/aman/sql/test.sql';
         $path = '/media/hdd2/new/Music/INDONESIA';
         // $draft = '/home/cyber/Workdir/test.sql';
         // $path = '/home/cyber/public_html/new';
