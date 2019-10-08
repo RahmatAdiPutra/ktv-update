@@ -13,35 +13,89 @@ class ConvertController extends Controller
 {
     public function index(Request $request)
     {
-        $draft = '/home/aman/sql/test.sql';
-        $path = '/media/hdd2/new/Music/INDONESIA';
+        $draft = '/home/aman/convert/test.sql';
+        $newname = '/home/aman/convert/newname.sh';
+        $original = '/home/aman/convert/original.sh';
+        $dirname = '/media/hdd2/new/Music/BARAT';
+
         // $draft = '/home/cyber/Workdir/test.sql';
-        // $path = '/home/cyber/public_html/new';
-        $basepath = "hdd1/new/ind/";
-        $format = "mp4";
-        $filepath = $this->getFilepath($path, $basepath, $format);
-        File::put($draft, implode("\n", $filepath));
+        // $newname = '/home/cyber/Workdir/newname.sh';
+        // $original = '/home/cyber/Workdir/original.sh';
+        // $dirname = '/home/cyber/public_html/new';
+
+        $basepath = "hdd1/new/eng/";
+
+        $rename = $this->renameFile($dirname);
+        $query = $this->getQuery($dirname, $basepath);
+
+        File::put($draft, implode("\n", $query['songs']));
+        File::put($newname, implode("\n", $rename['newname']));
+        File::put($original, implode("\n", $rename['original']));
+
         return 'Sukses';
     }
 
-    public function getFilepath($path, $basepath, $format)
+    public function getQuery($dirname, $basepath)
     {
         $data = [];
-        $filesInFolder = File::allFiles($path);
+        $filesInFolder = File::allFiles($dirname);
         $date = date('Y-m-d H:i:s');
 
         foreach($filesInFolder as $path)
         {
             $pathinfo = pathinfo($path);
-            $file_path = $basepath.$pathinfo['filename'].".".$format;
             $exp = explode('#', $pathinfo['filename']);
             $title = Str::title($exp[0]);
-            if (count($exp) > 1) {
-                $artist = Str::title($exp[1]);
-            } else {
+            if (count($exp) <= 1) {
                 $artist = '';
+                $filename = Str::slug($title, '_');
+            } else if (count($exp) <= 2) {
+                $artist = Str::title($exp[1]);
+                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_');
+            } else if (count($exp) <= 3) {
+                $artist = Str::title($exp[1]);
+                $lang = Str::title($exp[2]);
+                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_') . '-' . Str::slug($lang, '_');
+            } else {
+                $artist = Str::title($exp[1]);
+                $lang = Str::title($exp[2]);
+                $channel = Str::title($exp[3]);
+                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_') . '-' . Str::slug($lang, '_') . '-' . Str::slug($channel, '_');
             }
-            $data[] = "INSERT INTO `ktv_v1`.`songs` (`song_genre_id`, `song_language_id`, `title`, `artist_label`, `file_path`, `created_at` , `updated_at`) VALUES (4, 1, \"$title\", \"$artist\", \"$file_path\", \"$date\", \"$date\");";
+            $file_path = $basepath . $filename . ".mp4";
+            $data['songs'][] = "INSERT INTO `ktv_v1`.`songs` (`song_genre_id`, `song_language_id`, `title`, `artist_label`, `file_path`, `created_at` , `updated_at`) VALUES (4, 1, \"$title\", \"$artist\", \"$file_path\", \"$date\", \"$date\");";
+        }
+        return $data;
+    }
+
+    public function renameFile($dirname)
+    {
+        $data = [];
+        $filesInFolder = File::allFiles($dirname);
+
+        foreach($filesInFolder as $path)
+        {
+            $pathinfo = pathinfo($path);
+            $exp = explode('#', $pathinfo['filename']);
+            $title = Str::title($exp[0]);
+            if (count($exp) <= 1) {
+                $artist = '';
+                $filename = Str::slug($title, '_');
+            } else if (count($exp) <= 2) {
+                $artist = Str::title($exp[1]);
+                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_');
+            } else if (count($exp) <= 3) {
+                $artist = Str::title($exp[1]);
+                $lang = Str::title($exp[2]);
+                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_') . '-' . Str::slug($lang, '_');
+            } else {
+                $artist = Str::title($exp[1]);
+                $lang = Str::title($exp[2]);
+                $channel = Str::title($exp[3]);
+                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_') . '-' . Str::slug($lang, '_') . '-' . Str::slug($channel, '_');
+            }
+            $data['newname'][] = "mv \"$dirname/$pathinfo[filename].$pathinfo[extension]\" \"$dirname/$filename.$pathinfo[extension]\"";
+            $data['original'][] = "mv \"$dirname/$filename.$pathinfo[extension]\" \"$dirname/$pathinfo[filename].$pathinfo[extension]\"";
         }
         return $data;
     }
