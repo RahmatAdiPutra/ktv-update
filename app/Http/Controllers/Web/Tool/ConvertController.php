@@ -60,8 +60,8 @@ class ConvertController extends Controller
                     $artist = '';
                     $filename = Str::slug($title, '_');
                 }
-                $data['rename_new'][] = "mv";
-                $data['rename_original'][] = "mv";
+                $data['rename_new'][] = "mv \"$pathinfo[dirname]/$pathinfo[filename].$pathinfo[extension]\" \"$setup[basepath]$filename$setup[extension]\"";
+                $data['rename_original'][] = "mv \"$setup[basepath]$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[filename].$pathinfo[extension]\"";
                 $data['songs'][] = [
                     'song_genre_id' => $genre->id,
                     'song_language_id' => $lang->id,
@@ -70,7 +70,7 @@ class ConvertController extends Controller
                     'file_path' => $setup['basepath'] . $filename . $setup['extension']
                 ];
             }
-            $song->insert($data['songs']);
+            // $song->insert($data['songs']);
             return $data;
         } else {
             return 'Not available';
