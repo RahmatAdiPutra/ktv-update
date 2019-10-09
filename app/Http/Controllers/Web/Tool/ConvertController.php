@@ -21,16 +21,16 @@ class ConvertController extends Controller
         $setup = collect([
             'genre' => 'pop',
             'lang' => 'indonesia',
-            'dirname' => '/home/cyber/public_html/new/',
-            // 'dirname' => '/media/hdd2/new/Music/INDONESIA/',
+            // 'dirname' => '/home/cyber/public_html/new/',
+            'dirname' => '/media/hdd2/new/Music/INDONESIA/',
             'basepath' => 'hdd1/new/ind/',
             'extension' => '.mp4'
         ]);
 
         $files = $this->files($setup);
 
-        $path = '/home/cyber/Workdir/';
-        // $path = '/home/aman/convert/';
+        // $path = '/home/cyber/Workdir/';
+        $path = '/home/aman/convert/';
 
         File::put($path.'rename_new.sh', implode("\n", $files['rename_new']));
         File::put($path.'rename_original.sh', implode("\n", $files['rename_original']));
