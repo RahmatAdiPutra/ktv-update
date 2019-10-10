@@ -40,9 +40,9 @@ class ConvertController extends Controller
         // scp aman@192.168.7.224:/home/aman/convert/rename_original.sh /home/cyber/public_html/sh/
 
         // $setup = Setting::get('dropBox');
-        return $setup = json_decode(File::get(public_path('dropBox.json')), true);
+        $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
-        $files = $this->files($setup);
+        return $files = $this->files($setup);
 
         File::put($setup[env('DROP_BOX')]['path'].'rename_new.sh', implode("\n", $files['rename_new']));
         File::put($setup[env('DROP_BOX')]['path'].'rename_original.sh', implode("\n", $files['rename_original']));
