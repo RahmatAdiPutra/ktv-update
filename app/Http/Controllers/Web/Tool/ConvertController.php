@@ -42,7 +42,7 @@ class ConvertController extends Controller
         // $setup = Setting::get('dropBox');
         $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
-        return $files = $this->files($setup);
+        $files = $this->files($setup);
 
         File::put($setup[env('DROP_BOX')]['path'].'rename_new.sh', implode("\n", $files['rename_new']));
         File::put($setup[env('DROP_BOX')]['path'].'rename_original.sh', implode("\n", $files['rename_original']));
