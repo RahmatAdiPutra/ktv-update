@@ -68,8 +68,8 @@ class ConvertController extends Controller
                     $artist = '';
                     $filename = Str::slug($title, '_');
                 }
-                $data['rename_new'][] = $pathinfo['extension'];
-                $data['rename_original'][] = $pathinfo['extension'];
+                $data['rename_new'][] = $pathinfo['filename'];
+                $data['rename_original'][] = $pathinfo['filename'];
                 $data['songs'][] = [
                     'song_genre_id' => $genre->id,
                     'song_language_id' => $lang->id,
