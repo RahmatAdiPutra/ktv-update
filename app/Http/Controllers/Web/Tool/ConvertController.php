@@ -42,7 +42,7 @@ class ConvertController extends Controller
         // $setup = Setting::get('dropBox');
         $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
-        $files = $this->files($setup);
+        return $files = $this->files($setup);
 
         File::put($setup[env('DROP_BOX')]['path'].'rename_new.sh', implode("\n", $files['rename_new']));
         File::put($setup[env('DROP_BOX')]['path'].'rename_original.sh', implode("\n", $files['rename_original']));
@@ -72,8 +72,9 @@ class ConvertController extends Controller
                     $artist = '';
                     $filename = Str::slug($title, '_');
                 }
-                $data['rename_new'][] = "mv \"$pathinfo[dirname]/$pathinfo[filename].\" \"$setup[basepath]$filename$setup[extension]\"";
-                $data['rename_original'][] = "mv \"$setup[basepath]$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[filename].\"";
+                $data[] = $pathinfo;
+                // $data['rename_new'][] = "mv \"$pathinfo[dirname]/$pathinfo[filename].$pathinfo[extension]\" \"$setup[basepath]$filename$setup[extension]\"";
+                // $data['rename_original'][] = "mv \"$setup[basepath]$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[filename].$pathinfo[extension]\"";
                 // $data['songs'][] = [
                 //     'song_genre_id' => $genre->id,
                 //     'song_language_id' => $lang->id,
