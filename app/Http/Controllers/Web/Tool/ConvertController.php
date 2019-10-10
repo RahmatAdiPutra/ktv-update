@@ -22,7 +22,7 @@ class ConvertController extends Controller
         // $setup = [
         //     'development' => [
         //         'dirname' => '/home/cyber/public_html/new/',
-        //         'path' => '/home/cyber/Workdir/'
+        //         'path' => '/home/cyber/public_html/sh/'
         //     ],
         //     'production' => [
         //         'dirname' => '/media/hdd2/new/Music/INDONESIA/',
@@ -34,9 +34,13 @@ class ConvertController extends Controller
         //     'lang' => 'indonesia',
         // ];
 
-        // {"development":{"dirname":"/home/cyber/public_html/new/","path": "/home/cyber/Workdir/"},"production":{"dirname": "/media/hdd2/new/Music/INDONESIA/","path": "/home/aman/convert/"},"basepath":"hdd1/new/ind/","extension":".mp4","genre":"pop","lang":"indonesia"}
+        // {"development":{"dirname":"/home/cyber/public_html/new/","path": "/home/cyber/public_html/sh/"},"production":{"dirname": "/media/hdd2/new/Music/INDONESIA/","path": "/home/aman/convert/"},"basepath":"hdd1/new/ind/","extension":".mp4","genre":"pop","lang":"indonesia"}
 
-        $setup = Setting::get('dropBox');
+        // scp aman@192.168.7.224:/home/aman/convert/rename_new.sh /home/cyber/public_html/sh/
+        // scp aman@192.168.7.224:/home/aman/convert/rename_original.sh /home/cyber/public_html/sh/
+
+        // $setup = Setting::get('dropBox');
+        $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
         $files = $this->files($setup);
 
@@ -68,7 +72,9 @@ class ConvertController extends Controller
                     $artist = '';
                     $filename = Str::slug($title, '_');
                 }
-                $data['rename_new'][] = $pathinfo['filename'];
+                // $data['rename_new'][] = "mv \"$pathinfo[dirname]/$pathinfo[filename].$pathinfo[extension]\" \"$setup[basepath]$filename$setup[extension]\"";
+                // $data['rename_original'][] = "mv \"$setup[basepath]$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[filename].$pathinfo[extension]\"";
+                $data['rename_new'][] = $$pathinfo['filename'];
                 $data['rename_original'][] = $pathinfo['filename'];
                 $data['songs'][] = [
                     'song_genre_id' => $genre->id,

@@ -1,0 +1,14 @@
+{
+    "development": {
+        "dirname": "/home/cyber/public_html/new/",
+        "path": "/home/cyber/public_html/sh/"
+    },
+    "production": {
+        "dirname": "/media/hdd2/new/Music/INDONESIA/",
+        "path": "/home/aman/convert/"
+    },
+    "basepath": "hdd1/new/ind/",
+    "extension": ".mp4",
+    "genre": "pop",
+    "lang": "indonesia"
+}
