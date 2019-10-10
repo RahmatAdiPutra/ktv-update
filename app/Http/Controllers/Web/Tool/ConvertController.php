@@ -11,6 +11,7 @@ use App\Models\Tool\Song as ToolSong;
 use App\Models\Tool\SongMap;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Models\Tool\Setting;
 
 class ConvertController extends Controller
 {
@@ -18,22 +19,29 @@ class ConvertController extends Controller
 
     public function index(Request $request)
     {
-        $setup = collect([
-            'genre' => 'pop',
-            'lang' => 'indonesia',
-            // 'dirname' => '/home/cyber/public_html/new/',
-            'dirname' => '/media/hdd2/new/Music/INDONESIA/',
-            'basepath' => 'hdd1/new/ind/',
-            'extension' => '.mp4'
-        ]);
+        // $setup = [
+        //     'development' => [
+        //         'dirname' => '/home/cyber/public_html/new/',
+        //         'path' => '/home/cyber/Workdir/'
+        //     ],
+        //     'production' => [
+        //         'dirname' => '/media/hdd2/new/Music/INDONESIA/',
+        //         'path' => '/home/aman/convert/'
+        //     ],
+        //     'basepath' => 'hdd1/new/ind/',
+        //     'extension' => '.mp4',
+        //     'genre' => 'pop',
+        //     'lang' => 'indonesia',
+        // ];
 
-        return $files = $this->files($setup);
+        // {"development":{"dirname":"/home/cyber/public_html/new/","path": "/home/cyber/Workdir/"},"production":{"dirname": "/media/hdd2/new/Music/INDONESIA/","path": "/home/aman/convert/"},"basepath":"hdd1/new/ind/","extension":".mp4","genre":"pop","lang":"indonesia"}
 
-        // $path = '/home/cyber/Workdir/';
-        $path = '/home/aman/convert/';
+        $setup = Setting::get('dropBox');
 
-        File::put($path.'rename_new.sh', implode("\n", $files['rename_new']));
-        File::put($path.'rename_original.sh', implode("\n", $files['rename_original']));
+        $files = $this->files($setup);
+
+        File::put($setup[env('DROP_BOX')]['path'].'rename_new.sh', implode("\n", $files['rename_new']));
+        File::put($setup[env('DROP_BOX')]['path'].'rename_original.sh', implode("\n", $files['rename_original']));
 
         return 'Done';
     }
@@ -46,7 +54,7 @@ class ConvertController extends Controller
 
         if (!empty($genre) && !empty($lang)) {
             $data = [];
-            $filesInFolder = File::allFiles($setup['dirname']);
+            $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['dirname']);
 
             foreach($filesInFolder as $path)
             {
