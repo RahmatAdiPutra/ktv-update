@@ -74,8 +74,8 @@ class ConvertController extends Controller
                 }
                 // $data['rename_new'][] = "mv \"$pathinfo[dirname]/$pathinfo[filename].$pathinfo[extension]\" \"$setup[basepath]$filename$setup[extension]\"";
                 // $data['rename_original'][] = "mv \"$setup[basepath]$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[filename].$pathinfo[extension]\"";
-                $data['rename_new'][] = $$pathinfo['filename'];
-                $data['rename_original'][] = $pathinfo['filename'];
+                $data['rename_new'][] = 'a';
+                $data['rename_original'][] = 'a';
                 $data['songs'][] = [
                     'song_genre_id' => $genre->id,
                     'song_language_id' => $lang->id,
