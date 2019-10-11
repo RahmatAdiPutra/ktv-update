@@ -35,7 +35,7 @@ class ConvertController extends Controller
         $file = $this->file($setup);
         File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['original'], implode("\n", $file['original']));
         File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['newname'], implode("\n", $file['newname']));
-        File::put($setup[env('DROP_BOX')]['path'].'song.json', json_encode($file['song']));
+        // File::put($setup[env('DROP_BOX')]['path'].'song.json', json_encode($file['song']));
 
         $convert = $this->convert($setup);
         File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['convert'], implode("\n", $convert['convert']));
