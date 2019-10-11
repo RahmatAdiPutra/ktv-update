@@ -10,6 +10,12 @@
     "basepath": "/media/hdd1/new/ind/",
     "filepath": "hdd1/new/ind/",
     "extension": ".mp4",
+    "extension_allow": [
+        "mp4",
+        "MP4",
+        "mp3",
+        "MP3"
+    ],
     "genre": "pop",
     "lang": "indonesia"
 }
