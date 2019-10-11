@@ -25,45 +25,27 @@ class ConvertController extends Controller
            - membuat perintah rename file to newname -> bentuk file shell script
            - membuat data files -> bentuk file json
            - save data file
-        2. function untuk hadle update 
+        2. function untuk hadle :
+           - membuat perintah convert -> bentuk file shell script
         3. function untuk handle excute shell script
         */
-        
-        // $setup = [
-        //     'development' => [
-        //         'dirname' => '/home/cyber/public_html/new/',
-        //         'path' => '/home/cyber/public_html/sh/'
-        //     ],
-        //     'production' => [
-        //         'dirname' => '/media/hdd2/new/Music/INDONESIA/',
-        //         'path' => '/home/aman/convert/'
-        //     ],
-        //     'basepath' => 'hdd1/new/ind/',
-        //     'extension' => '.mp4',
-        //     'genre' => 'pop',
-        //     'lang' => 'indonesia',
-        // ];
-
-        // {"development":{"dirname":"/home/cyber/public_html/new/","path": "/home/cyber/public_html/sh/"},"production":{"dirname": "/media/hdd2/new/Music/INDONESIA/","path": "/home/aman/convert/"},"basepath":"hdd1/new/ind/","extension":".mp4","genre":"pop","lang":"indonesia"}
-
-        // scp aman@192.168.7.224:/home/aman/convert/rename_new.sh /home/cyber/public_html/sh/
-        // scp aman@192.168.7.224:/home/aman/convert/rename_original.sh /home/cyber/public_html/sh/
 
         // $setup = Setting::get('dropBox');
         $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
-        // $files = $this->files($setup);
-        $files = $this->update($setup);
+        $files = $this->file($setup);
+        // $files = $this->convert($setup);
 
-        // File::put($setup[env('DROP_BOX')]['path'].'rename_new.sh', implode("\n", $files['rename_new']));
-        // File::put($setup[env('DROP_BOX')]['path'].'rename_original.sh', implode("\n", $files['rename_original']));
-        File::put($setup[env('DROP_BOX')]['path'].'convert_update.sh', implode("\n", $files['update']));
-        // File::put(public_path('files/songs.json'), json_encode($files['songs']));
+        File::put($setup[env('DROP_BOX')]['path'].$setup['file']['sh']['original'], implode("\n", $files['original']));
+        File::put($setup[env('DROP_BOX')]['path'].$setup['file']['sh']['newname'], implode("\n", $files['newname']));
+        // File::put(public_path('files/'.$setup['file']['json']['song']), json_encode($files['song']));
+
+        // File::put($setup[env('DROP_BOX')]['path'].$setup['file']['sh']['convert'], implode("\n", $files['convert']));
 
         return 'Done';
     }
 
-    public function files($setup)
+    public function file($setup)
     {
         $song = new ToolSong();
         $genre = SongGenre::select('id', 'name')->where('name', 'like', '%'.$setup['genre'].'%')->first();
@@ -85,9 +67,9 @@ class ConvertController extends Controller
                     $artist = '';
                     $filename = Str::slug($title, '_');
                 }
-                $data['original'][] = "mv \"$pathinfo[dirname]$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[basename]\"";
+                $data['original'][] = "mv \"$pathinfo[dirname]/$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[basename]\"";
                 $data['newname'][] = "mv \"$pathinfo[dirname]/$pathinfo[basename]\" \"$pathinfo[dirname]/$filename$setup[extension]\"";
-                $data['songs'][] = [
+                $data['song'][] = [
                     'song_genre_id' => $genre->id,
                     'song_language_id' => $lang->id,
                     'title' => $title,
@@ -95,14 +77,14 @@ class ConvertController extends Controller
                     'file_path' => $setup['filepath'] . $filename . $setup['extension']
                 ];
             }
-            $song->insert($data['songs']);
+            $song->insert($data['song']);
             return $data;
         } else {
             return 'Not available';
         }
     }
 
-    public function update($setup)
+    public function convert($setup)
     {
         $data = [];
         $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['dirname']);
@@ -113,14 +95,13 @@ class ConvertController extends Controller
             $result = File::exists($setup['basepath'].$pathinfo['filename'].$setup['extension']);
             if (in_array(pathinfo($path, PATHINFO_EXTENSION), $setup['extension_allow'])) {
                 if (!$result) {
-                    $data['update'][] = 'cp "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
+                    $data['convert'][] = 'cp "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
                 }
             } else {
                 if (!$result) {
-                    $data['update'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
+                    $data['convert'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
                 }
             }
-            // $data[] = $setup['extension_allow'];
         }
         return $data;
     }

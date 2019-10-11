@@ -7,10 +7,20 @@
         "dirname": "/media/hdd2/new/Music/INDONESIA/",
         "path": "/home/aman/convert/"
     },
+    "file": {
+        "json": {
+            "song" : "song.json"
+        },
+        "sh": {
+            "original": "original.sh",
+            "newname": "newname.sh",
+            "convert": "convert.sh"
+        }
+    },
     "basepath": "/media/hdd1/new/ind/",
     "filepath": "hdd1/new/ind/",
     "extension": ".mp4",
-    "extension_allow": [
+    "extension-allow": [
         "mp4",
         "MP4",
         "mp3",
