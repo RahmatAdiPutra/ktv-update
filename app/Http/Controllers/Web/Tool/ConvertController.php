@@ -53,7 +53,7 @@ class ConvertController extends Controller
         $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
         // $files = $this->files($setup);
-        return $files = $this->update($setup);
+        $files = $this->update($setup);
 
         // File::put($setup[env('DROP_BOX')]['path'].'rename_new.sh', implode("\n", $files['rename_new']));
         // File::put($setup[env('DROP_BOX')]['path'].'rename_original.sh', implode("\n", $files['rename_original']));
@@ -111,7 +111,7 @@ class ConvertController extends Controller
         {
             $pathinfo = pathinfo($path);
             $result = File::exists($setup['basepath'].$pathinfo['filename'].$setup['extension']);
-            if (!in_array($pathinfo['extension'], $setup['extension_allow'])) {
+            if (in_array(pathinfo($path, PATHINFO_EXTENSION), $setup['extension_allow'])) {
                 if (!$result) {
                     $data['update'][] = 'cp "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
                 }
