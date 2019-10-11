@@ -23,7 +23,6 @@ class ConvertController extends Controller
         1. function untuk handle :
            - membuat perintah rename file to original -> bentuk file shell script
            - membuat perintah rename file to newname -> bentuk file shell script
-           - membuat data files -> bentuk file json
            - save data file
         2. function untuk hadle :
            - membuat perintah convert -> bentuk file shell script
@@ -33,14 +32,13 @@ class ConvertController extends Controller
         // $setup = Setting::get('dropBox');
         $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
-        $files = $this->file($setup);
-        // $files = $this->convert($setup);
+        $file = $this->file($setup);
+        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['original'], implode("\n", $file['original']));
+        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['newname'], implode("\n", $file['newname']));
+        File::put($setup[env('DROP_BOX')]['path'].'song.json', json_encode($file['song']));
 
-        File::put($setup[env('DROP_BOX')]['path'].$setup['file']['sh']['original'], implode("\n", $files['original']));
-        File::put($setup[env('DROP_BOX')]['path'].$setup['file']['sh']['newname'], implode("\n", $files['newname']));
-        // File::put(public_path('files/'.$setup['file']['json']['song']), json_encode($files['song']));
-
-        // File::put($setup[env('DROP_BOX')]['path'].$setup['file']['sh']['convert'], implode("\n", $files['convert']));
+        $convert = $this->convert($setup);
+        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['convert'], implode("\n", $convert['convert']));
 
         return 'Done';
     }
@@ -93,7 +91,7 @@ class ConvertController extends Controller
         {
             $pathinfo = pathinfo($path);
             $result = File::exists($setup['basepath'].$pathinfo['filename'].$setup['extension']);
-            if (in_array(pathinfo($path, PATHINFO_EXTENSION), $setup['extension_allow'])) {
+            if (in_array(pathinfo($path, PATHINFO_EXTENSION), $setup['extension-allow'])) {
                 if (!$result) {
                     $data['convert'][] = 'cp "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
                 }
@@ -102,6 +100,7 @@ class ConvertController extends Controller
                     $data['convert'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
                 }
             }
+            // $data['result'][] = $result;
         }
         return $data;
     }
