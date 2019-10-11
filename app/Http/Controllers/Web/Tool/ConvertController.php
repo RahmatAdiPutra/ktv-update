@@ -19,6 +19,16 @@ class ConvertController extends Controller
 
     public function index(Request $request)
     {
+        /*
+        1. function untuk handle :
+           - membuat perintah rename file to original -> bentuk file shell script
+           - membuat perintah rename file to newname -> bentuk file shell script
+           - membuat data files -> bentuk file json
+           - save data file
+        2. function untuk hadle update 
+        3. function untuk handle excute shell script
+        */
+        
         // $setup = [
         //     'development' => [
         //         'dirname' => '/home/cyber/public_html/new/',
@@ -42,10 +52,13 @@ class ConvertController extends Controller
         // $setup = Setting::get('dropBox');
         $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
-        $files = $this->files($setup);
+        // $files = $this->files($setup);
+        $files = $this->update($setup);
 
-        File::put($setup[env('DROP_BOX')]['path'].'rename_new.sh', implode("\n", $files['rename_new']));
-        File::put($setup[env('DROP_BOX')]['path'].'rename_original.sh', implode("\n", $files['rename_original']));
+        // File::put($setup[env('DROP_BOX')]['path'].'rename_new.sh', implode("\n", $files['rename_new']));
+        // File::put($setup[env('DROP_BOX')]['path'].'rename_original.sh', implode("\n", $files['rename_original']));
+        File::put($setup[env('DROP_BOX')]['path'].'convert_update.sh', implode("\n", $files['update']));
+        // File::put(public_path('files/songs.json'), json_encode($files['songs']));
 
         return 'Done';
     }
@@ -72,21 +85,39 @@ class ConvertController extends Controller
                     $artist = '';
                     $filename = Str::slug($title, '_');
                 }
-                $data['rename_new'][] = "mv \"$pathinfo[dirname]/$pathinfo[basename]\" \"$setup[basepath]$filename$setup[extension]\"";
-                $data['rename_original'][] = "mv \"$setup[basepath]$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[basename]\"";
-                // $data['songs'][] = [
-                //     'song_genre_id' => $genre->id,
-                //     'song_language_id' => $lang->id,
-                //     'title' => $title,
-                //     'artist_label' => $artist,
-                //     'file_path' => $setup['basepath'] . $filename . $setup['extension']
-                // ];
+                $data['original'][] = "mv \"$pathinfo[dirname]$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[basename]\"";
+                $data['newname'][] = "mv \"$pathinfo[dirname]/$pathinfo[basename]\" \"$pathinfo[dirname]/$filename$setup[extension]\"";
+                $data['songs'][] = [
+                    'song_genre_id' => $genre->id,
+                    'song_language_id' => $lang->id,
+                    'title' => $title,
+                    'artist_label' => $artist,
+                    'file_path' => $setup['filepath'] . $filename . $setup['extension']
+                ];
             }
-            // $song->insert($data['songs']);
+            $song->insert($data['songs']);
             return $data;
         } else {
             return 'Not available';
         }
+    }
+
+    public function update($setup)
+    {
+        $data = [];
+        $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['dirname']);
+        
+        foreach($filesInFolder as $path)
+        {
+            $pathinfo = pathinfo($path);
+            $result = File::exists("$setup[basepath]/$pathinfo[filename]$setup[extension]");
+            if ($result) {
+                $data['update'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].'/'.$pathinfo['filename'].$setup['extension'].'"';
+            } else {
+                $data['update'][] = '';
+            }
+        }
+        return $data;
     }
 
     public function sample(Request $request)
@@ -203,38 +234,6 @@ class ConvertController extends Controller
             }
             $file_path = $basepath . $filename . ".mp4";
             $data['songs'][] = "INSERT INTO `ktv_v1`.`songs` (`song_genre_id`, `song_language_id`, `title`, `artist_label`, `file_path`, `created_at` , `updated_at`) VALUES (4, 1, \"$title\", \"$artist\", \"$file_path\", \"$date\", \"$date\");";
-        }
-        return $data;
-    }
-
-    public function renameFile($dirname)
-    {
-        $data = [];
-        $filesInFolder = File::allFiles($dirname);
-
-        foreach($filesInFolder as $path)
-        {
-            $pathinfo = pathinfo($path);
-            $exp = explode('#', $pathinfo['filename']);
-            $title = Str::title($exp[0]);
-            if (count($exp) <= 1) {
-                $artist = '';
-                $filename = Str::slug($title, '_');
-            } else if (count($exp) <= 2) {
-                $artist = Str::title($exp[1]);
-                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_');
-            } else if (count($exp) <= 3) {
-                $artist = Str::title($exp[1]);
-                $lang = Str::title($exp[2]);
-                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_') . '-' . Str::slug($lang, '_');
-            } else {
-                $artist = Str::title($exp[1]);
-                $lang = Str::title($exp[2]);
-                $channel = Str::title($exp[3]);
-                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_') . '-' . Str::slug($lang, '_') . '-' . Str::slug($channel, '_');
-            }
-            $data['newname'][] = "mv \"$dirname/$pathinfo[filename].$pathinfo[extension]\" \"$dirname/$filename.$pathinfo[extension]\"";
-            $data['original'][] = "mv \"$dirname/$filename.$pathinfo[extension]\" \"$dirname/$pathinfo[filename].$pathinfo[extension]\"";
         }
         return $data;
     }
