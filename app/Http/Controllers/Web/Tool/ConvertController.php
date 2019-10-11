@@ -111,7 +111,7 @@ class ConvertController extends Controller
         {
             $pathinfo = pathinfo($path);
             $result = File::exists($setup['basepath'].$pathinfo['filename'].$setup['extension']);
-            if (in_array($pathinfo['extension'], $setup['extension_allow'])) {
+            if (!in_array($pathinfo['extension'], $setup['extension_allow'])) {
                 if (!$result) {
                     $data['update'][] = 'cp "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
                 }
