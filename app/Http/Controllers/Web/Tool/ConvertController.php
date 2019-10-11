@@ -75,7 +75,7 @@ class ConvertController extends Controller
                     'file_path' => $setup['filepath'] . $filename . $setup['extension']
                 ];
             }
-            $song->insert($data['song']);
+            // $song->insert($data['song']);
             return $data;
         } else {
             return 'Not available';
