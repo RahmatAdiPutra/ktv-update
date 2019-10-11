@@ -111,7 +111,7 @@ class ConvertController extends Controller
         {
             $pathinfo = pathinfo($path);
             $result = File::exists($setup['basepath'].$pathinfo['filename'].$setup['extension']);
-            if ($result) {
+            if (!$result) {
                 $data['update'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
             } else {
                 $data['update'][] = '';
