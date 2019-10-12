@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Tool;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Tool\Setting;
 use App\Models\Song;
 use App\Models\SongGenre;
 use App\Models\SongLanguage;
@@ -11,7 +12,7 @@ use App\Models\Tool\Song as ToolSong;
 use App\Models\Tool\SongMap;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use App\Models\Tool\Setting;
+use Illuminate\Support\Facades\DB;
 
 class ConvertController extends Controller
 {
@@ -83,7 +84,6 @@ class ConvertController extends Controller
 
         if (!empty($genre) && !empty($lang)) {
             $data = [];
-
             foreach($songs as $field)
             {
                 // $data['song'][] = [
@@ -93,13 +93,15 @@ class ConvertController extends Controller
                 //     'artist_label' => $field['artist_label'],
                 //     'file_path' => $field['file_path']
                 // ];
-                $song = new ToolSong();
-                $song->song_genre_id = $genre->id;
-                $song->song_language_id = $lang->id;
-                $song->title = $field['title'];
-                $song->artist_label = $field['artist_label'];
-                $song->file_path = $field['file_path'];
-                $song->save();
+                DB::transaction(function () use ($genre, $lang, $field) {
+                    $song = new ToolSong();
+                    $song->song_genre_id = $genre->id;
+                    $song->song_language_id = $lang->id;
+                    $song->title = $field['title'];
+                    $song->artist_label = $field['artist_label'];
+                    $song->file_path = $field['file_path'];
+                    $song->save();
+                }, 3);
             }
             return $data;
         } else {
