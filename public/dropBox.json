@@ -4,7 +4,7 @@
         "path": "/home/cyber/public_html/sh/"
     },
     "production": {
-        "dirname": "/media/hdd2/new/Music/INDONESIA/",
+        "dirname": "/media/hdd2/new/Music/BARAT/",
         "path": "/home/aman/convert/"
     },
     "file-sh": {
@@ -12,8 +12,8 @@
         "newname": "newname.sh",
         "convert": "convert.sh"
     },
-    "basepath": "/media/hdd1/new/ind/",
-    "filepath": "hdd1/new/ind/",
+    "basepath": "/media/hdd1/new/eng/",
+    "filepath": "hdd1/new/eng/",
     "extension": ".mp4",
     "extension-allow": [
         "mp4",
@@ -22,5 +22,5 @@
         "MP3"
     ],
     "genre": "pop",
-    "lang": "indonesia"
+    "lang": "english"
 }

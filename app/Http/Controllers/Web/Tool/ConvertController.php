@@ -66,8 +66,8 @@ class ConvertController extends Controller
                 $artist = '';
                 $filename = Str::slug($title, '_');
             }
-            $data['original'][] = "mv \"$pathinfo[dirname]/$filename$setup[extension]\" \"$pathinfo[dirname]/$pathinfo[basename]\"";
-            $data['newname'][] = "mv \"$pathinfo[dirname]/$pathinfo[basename]\" \"$pathinfo[dirname]/$filename$setup[extension]\"";
+            $data['original'][] = 'mv "'.$pathinfo['dirname'].'/'.$filename.$setup['extension'].'" "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'"';
+            $data['newname'][] = 'mv "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$pathinfo['dirname'].'/'.$filename.$setup['extension'].'"';
             $data['song'][] = [
                 'title' => $title,
                 'artist_label' => $artist,
