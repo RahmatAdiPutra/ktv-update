@@ -38,12 +38,12 @@ class ConvertController extends Controller
         File::put($setup[env('DROP_BOX')]['path'].$setup['sh-name']['newname'].'_'.$setup['lang'].$setup['extension-script'], implode("\n", $file['newname']));
         // File::put($setup[env('DROP_BOX')]['path'].'song.json', json_encode($file['song']));
 
-        $save = $this->save($setup, $this->song($setup));
+        // $save = $this->save($setup, $this->song($setup));
 
         $convert = $this->convert($setup);
         File::put($setup[env('DROP_BOX')]['path'].$setup['sh-name']['convert'].'_'.$setup['lang'].$setup['extension-script'], implode("\n", $convert['convert']));
 
-        // dd($file, $convert);
+        dd($file, $convert);
         // dd($file, $save, $convert);
 
         return 'Done';
@@ -66,8 +66,9 @@ class ConvertController extends Controller
                 $artist = '';
                 $filename = Str::slug($title, '_');
             }
-            $data['original'][] = 'mv "'.$pathinfo['dirname'].'/'.$filename.$setup['extension'].'" "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'"';
-            $data['newname'][] = 'mv "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$pathinfo['dirname'].'/'.$filename.$setup['extension'].'"';
+            $data['original'][] = 'mv "'.$pathinfo['dirname'].'/'.$filename.'.'.pathinfo($path, PATHINFO_EXTENSION).'" "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'"';
+            $data['newname'][] = 'mv "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$pathinfo['dirname'].'/'.$filename.'.'.pathinfo($path, PATHINFO_EXTENSION).'"';
+            // $data['test'][] = pathinfo($path, PATHINFO_EXTENSION);
         }
         return $data;
     }
