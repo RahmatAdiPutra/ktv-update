@@ -44,7 +44,7 @@ class ConvertController extends Controller
         $convert = $this->convert($setup);
         File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['convert'], implode("\n", $convert['convert']));
 
-        dd($file, $save, $convert);
+        // dd($file, $save, $convert);
 
         return 'Done';
     }
