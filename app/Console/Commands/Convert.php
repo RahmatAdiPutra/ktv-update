@@ -17,8 +17,8 @@ class Convert extends Command
      *
      * @var string
      */
-    // protected $signature = 'convert:mp4';
-    protected $signature = 'convert:mp4 {test? : Testing}'; // argument
+    protected $signature = 'convert:mp4';
+    // protected $signature = 'convert:mp4 {test? : Testing}'; // argument
     // protected $signature = 'convert:mp4 {--T|test= : Testing}'; // option
 
     /**
