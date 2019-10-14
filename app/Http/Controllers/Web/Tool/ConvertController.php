@@ -117,14 +117,14 @@ class ConvertController extends Controller
         foreach($filesInFolder as $path)
         {
             $pathinfo = pathinfo($path);
-            $result = File::exists($setup['basepath'].$pathinfo['filename'].$setup['extension']);
+            $result = File::exists($setup['basepath'].preg_replace("/\`/", "\`", $pathinfo['filename']).$setup['extension']);
             if (in_array(pathinfo($path, PATHINFO_EXTENSION), $setup['extension-allow'])) {
                 if (!$result) {
-                    $data['convert'][] = 'cp "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
+                    $data['convert'][] = 'cp "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$setup['basepath'].preg_replace("/\`/", "\`", $pathinfo['filename']).$setup['extension'].'"';
                 }
             } else {
                 if (!$result) {
-                    $data['convert'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.$pathinfo['basename'].'" "'.$setup['basepath'].$pathinfo['filename'].$setup['extension'].'"';
+                    $data['convert'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$setup['basepath'].preg_replace("/\`/", "\`", $pathinfo['filename']).$setup['extension'].'"';
                 }
             }
         }
