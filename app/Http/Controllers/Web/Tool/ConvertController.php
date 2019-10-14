@@ -24,8 +24,7 @@ class ConvertController extends Controller
         1. function untuk handle :
            - membuat perintah rename file to original -> bentuk file shell script
            - membuat perintah rename file to newname -> bentuk file shell script
-           - membuat data file video song
-        2. function untuk hadle save data file video song
+        2. function untuk hadle save data video song
         3. function untuk hadle :
            - membuat perintah convert -> bentuk file shell script
         4. function untuk handle excute shell script
@@ -35,15 +34,16 @@ class ConvertController extends Controller
         $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
         $file = $this->file($setup);
-        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['original'], implode("\n", $file['original']));
-        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['newname'], implode("\n", $file['newname']));
+        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['original'].'_'.$setup['lang'], implode("\n", $file['original']));
+        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['newname'].'_'.$setup['lang'], implode("\n", $file['newname']));
         // File::put($setup[env('DROP_BOX')]['path'].'song.json', json_encode($file['song']));
 
-        // $save = $this->save($setup, $file['song']);
+        $save = $this->save($setup, $this->song($setup));
 
         $convert = $this->convert($setup);
-        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['convert'], implode("\n", $convert['convert']));
+        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['convert'].'_'.$setup['lang'], implode("\n", $convert['convert']));
 
+        // dd($file, $convert);
         // dd($file, $save, $convert);
 
         return 'Done';
@@ -68,7 +68,28 @@ class ConvertController extends Controller
             }
             $data['original'][] = 'mv "'.$pathinfo['dirname'].'/'.$filename.$setup['extension'].'" "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'"';
             $data['newname'][] = 'mv "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$pathinfo['dirname'].'/'.$filename.$setup['extension'].'"';
-            $data['song'][] = [
+        }
+        return $data;
+    }
+
+    public function song($setup)
+    {
+        $data = [];
+        $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['dirname']);
+
+        foreach($filesInFolder as $path)
+        {
+            $pathinfo = pathinfo($path);
+            $exp = explode('#', $pathinfo['filename']);
+            $title = preg_replace("/\s\((.*?)\)/", "", Str::title($exp[0])); // hilangin dalam kurung
+            if (count($exp) > 1) {
+                $artist = Str::title($exp[1]);
+                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_');
+            } else {
+                $artist = '';
+                $filename = Str::slug($title, '_');
+            }
+            $data[] = [
                 'title' => $title,
                 'artist_label' => $artist,
                 'file_path' => $setup['filepath'] . $filename . $setup['extension']
@@ -86,22 +107,22 @@ class ConvertController extends Controller
             $data = [];
             foreach($songs as $field)
             {
-                // $data['song'][] = [
-                //     'song_genre_id' => $genre->id,
-                //     'song_language_id' => $lang->id,
-                //     'title' => $field['title'],
-                //     'artist_label' => $field['artist_label'],
-                //     'file_path' => $field['file_path']
-                // ];
-                DB::transaction(function () use ($genre, $lang, $field) {
-                    $song = new ToolSong();
-                    $song->song_genre_id = $genre->id;
-                    $song->song_language_id = $lang->id;
-                    $song->title = $field['title'];
-                    $song->artist_label = $field['artist_label'];
-                    $song->file_path = $field['file_path'];
-                    $song->save();
-                }, 3);
+                $data['song'][] = [
+                    'song_genre_id' => $genre->id,
+                    'song_language_id' => $lang->id,
+                    'title' => $field['title'],
+                    'artist_label' => $field['artist_label'],
+                    'file_path' => $field['file_path']
+                ];
+                // DB::transaction(function () use ($genre, $lang, $field) {
+                //     $song = new ToolSong();
+                //     $song->song_genre_id = $genre->id;
+                //     $song->song_language_id = $lang->id;
+                //     $song->title = $field['title'];
+                //     $song->artist_label = $field['artist_label'];
+                //     $song->file_path = $field['file_path'];
+                //     $song->save();
+                // }, 3);
             }
             return $data;
         } else {
