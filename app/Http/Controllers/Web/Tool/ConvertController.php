@@ -34,14 +34,14 @@ class ConvertController extends Controller
         $setup = json_decode(File::get(public_path('dropBox.json')), true);
 
         $file = $this->file($setup);
-        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['original'].'_'.$setup['lang'], implode("\n", $file['original']));
-        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['newname'].'_'.$setup['lang'], implode("\n", $file['newname']));
+        File::put($setup[env('DROP_BOX')]['path'].$setup['sh-name']['original'].'_'.$setup['lang'].$setup['extension-script'], implode("\n", $file['original']));
+        File::put($setup[env('DROP_BOX')]['path'].$setup['sh-name']['newname'].'_'.$setup['lang'].$setup['extension-script'], implode("\n", $file['newname']));
         // File::put($setup[env('DROP_BOX')]['path'].'song.json', json_encode($file['song']));
 
         $save = $this->save($setup, $this->song($setup));
 
         $convert = $this->convert($setup);
-        File::put($setup[env('DROP_BOX')]['path'].$setup['file-sh']['convert'].'_'.$setup['lang'], implode("\n", $convert['convert']));
+        File::put($setup[env('DROP_BOX')]['path'].$setup['sh-name']['convert'].'_'.$setup['lang'].$setup['extension-script'], implode("\n", $convert['convert']));
 
         // dd($file, $convert);
         // dd($file, $save, $convert);
