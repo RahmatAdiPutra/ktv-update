@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Tool;
 
 use Illuminate\Http\Request;
+use App\Console\Commands\Convert;
 use App\Http\Controllers\Controller;
 use App\Models\Tool\Setting;
 use App\Models\Song;
@@ -21,28 +22,27 @@ class ConvertController extends Controller
     public function index(Request $request)
     {
         /*
-        1. function untuk handle :
-           - membuat perintah rename file to original -> bentuk file shell script
-           - membuat perintah rename file to newname -> bentuk file shell script
-        2. function untuk hadle save data video song
-        3. function untuk hadle :
-           - membuat perintah convert -> bentuk file shell script
-        4. function untuk handle excute shell script
+        Step job :
+        1. rename file
+        2. save data
+        3. make shell script convert to mp4
         */
 
-        // $setup = Setting::get('dropBox');
+        // return $setup = Setting::get('dropBox');
         $setup = json_decode(File::get(public_path('dropBox.json')), true);
+        $command = new Convert();
 
         $file = $this->file($setup);
-        File::put($setup[env('DROP_BOX')]['path'].$setup['sh-name']['original'].'_'.$setup['lang'].$setup['extension-script'], implode("\n", $file['original']));
-        File::put($setup[env('DROP_BOX')]['path'].$setup['sh-name']['newname'].'_'.$setup['lang'].$setup['extension-script'], implode("\n", $file['newname']));
-        // File::put($setup[env('DROP_BOX')]['path'].'song.json', json_encode($file['song']));
+        // File::put($setup[env('DROP_BOX')]['path']['script'].$setup['script']['name']['original'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['original']));
+        // File::put($setup[env('DROP_BOX')]['path']['script'].$setup['script']['name']['newname'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['newname']));
+        // File::put($setup[env('DROP_BOX')]['path']['script'].'song.json', json_encode($file['song']));
 
         // $save = $this->save($setup, $this->song($setup));
 
-        $convert = $this->convert($setup);
-        File::put($setup[env('DROP_BOX')]['path'].$setup['sh-name']['convert'].'_'.$setup['lang'].$setup['extension-script'], implode("\n", $convert['convert']));
+        // $convert = $this->convert($setup);
+        // File::put($setup[env('DROP_BOX')]['path']['script'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $convert['convert']));
 
+        // dd($command->rename($file['newname']));
         // dd($file, $convert);
         // dd($file, $save, $convert);
 
@@ -52,7 +52,7 @@ class ConvertController extends Controller
     public function file($setup)
     {
         $data = [];
-        $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['dirname']);
+        $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['path']['song']);
 
         foreach($filesInFolder as $path)
         {
@@ -68,7 +68,6 @@ class ConvertController extends Controller
             }
             $data['original'][] = 'mv "'.$pathinfo['dirname'].'/'.$filename.'.'.pathinfo($path, PATHINFO_EXTENSION).'" "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'"';
             $data['newname'][] = 'mv "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$pathinfo['dirname'].'/'.$filename.'.'.pathinfo($path, PATHINFO_EXTENSION).'"';
-            // $data['test'][] = pathinfo($path, PATHINFO_EXTENSION);
         }
         return $data;
     }
@@ -76,24 +75,19 @@ class ConvertController extends Controller
     public function song($setup)
     {
         $data = [];
-        $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['dirname']);
+        $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['path']['song']);
 
         foreach($filesInFolder as $path)
         {
             $pathinfo = pathinfo($path);
-            $exp = explode('#', $pathinfo['filename']);
-            $title = preg_replace("/\s\((.*?)\)/", "", Str::title($exp[0])); // hilangin dalam kurung
-            if (count($exp) > 1) {
-                $artist = Str::title($exp[1]);
-                $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_');
-            } else {
-                $artist = '';
-                $filename = Str::slug($title, '_');
-            }
+            $exp = explode('-', $pathinfo['filename']);
+            $title = preg_replace("/\_/", " ", Str::title($exp[0])); // replace character underscore
+            $artist = count($exp) > 1 ? preg_replace("/\_/", " ", Str::title($exp[1])) : '';
+            $filename = $pathinfo['filename'];
             $data[] = [
                 'title' => $title,
                 'artist_label' => $artist,
-                'file_path' => $setup['filepath'] . $filename . $setup['extension']
+                'file_path' => $setup['filepath'] . $filename . $setup['song']['extension']
             ];
         }
         return $data;
@@ -108,22 +102,22 @@ class ConvertController extends Controller
             $data = [];
             foreach($songs as $field)
             {
-                $data['song'][] = [
-                    'song_genre_id' => $genre->id,
-                    'song_language_id' => $lang->id,
-                    'title' => $field['title'],
-                    'artist_label' => $field['artist_label'],
-                    'file_path' => $field['file_path']
-                ];
-                // DB::transaction(function () use ($genre, $lang, $field) {
-                //     $song = new ToolSong();
-                //     $song->song_genre_id = $genre->id;
-                //     $song->song_language_id = $lang->id;
-                //     $song->title = $field['title'];
-                //     $song->artist_label = $field['artist_label'];
-                //     $song->file_path = $field['file_path'];
-                //     $song->save();
-                // }, 3);
+                // $data['song'][] = [
+                //     'song_genre_id' => $genre->id,
+                //     'song_language_id' => $lang->id,
+                //     'title' => $field['title'],
+                //     'artist_label' => $field['artist_label'],
+                //     'file_path' => $field['file_path']
+                // ];
+                DB::transaction(function () use ($genre, $lang, $field) {
+                    $song = new ToolSong();
+                    $song->song_genre_id = $genre->id;
+                    $song->song_language_id = $lang->id;
+                    $song->title = $field['title'];
+                    $song->artist_label = $field['artist_label'];
+                    $song->file_path = $field['file_path'];
+                    $song->save();
+                }, 3);
             }
             return $data;
         } else {
@@ -134,19 +128,19 @@ class ConvertController extends Controller
     public function convert($setup)
     {
         $data = [];
-        $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['dirname']);
+        $filesInFolder = File::allFiles($setup[env('DROP_BOX')]['path']['song']);
         
         foreach($filesInFolder as $path)
         {
             $pathinfo = pathinfo($path);
-            $result = File::exists($setup['basepath'].$pathinfo['filename'].$setup['extension']);
-            if (in_array(pathinfo($path, PATHINFO_EXTENSION), $setup['extension-allow'])) {
+            $result = File::exists($setup['basepath'].$pathinfo['filename'].$setup['song']['extension']);
+            if (in_array(Str::lower(pathinfo($path, PATHINFO_EXTENSION)), $setup['song']['allow'])) {
                 if (!$result) {
-                    $data['convert'][] = 'cp "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$setup['basepath'].preg_replace("/\`/", "\`", $pathinfo['filename']).$setup['extension'].'"';
+                    $data['convert'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$setup['basepath'].preg_replace("/\`/", "\`", $pathinfo['filename']).$setup['song']['extension'].'"';
                 }
             } else {
                 if (!$result) {
-                    $data['convert'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$setup['basepath'].preg_replace("/\`/", "\`", $pathinfo['filename']).$setup['extension'].'"';
+                    $data['convert'][] = 'cp "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$setup['basepath'].preg_replace("/\`/", "\`", $pathinfo['filename']).$setup['song']['extension'].'"';
                 }
             }
         }
