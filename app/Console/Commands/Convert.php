@@ -55,9 +55,9 @@ class Convert extends Command
             // $this->output->writeln('Run job save data');
             // $convert->save($setup, $convert->song($setup));
 
-            $this->output->writeln('Run job make shell script convert to mp4');
-            $convertFile = $convert->convert($setup);
-            File::put($setup[env('DROP_BOX')]['path']['script'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $convertFile['convert']));
+            // $this->output->writeln('Run job make shell script convert to mp4');
+            // $convertFile = $convert->convert($setup);
+            // File::put($setup[env('DROP_BOX')]['path']['script'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $convertFile['convert']));
 
             // $script = $this->choice('Execute script ?', $setup['script']['name'], 'newname');
             // $this->output->writeln('Run job rename file use <info>'.$script.'<info>');
