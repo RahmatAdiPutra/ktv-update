@@ -79,7 +79,11 @@ class ConvertController extends Controller
     public function song($setup)
     {
         $data = [];
-        $filesInFolder = File::allFiles($setup['base']['oldpath']);
+        if ($setup['flag']['newpath']) {
+            $filesInFolder = File::allFiles($setup['base']['newpath']);
+        } else {
+            $filesInFolder = File::allFiles($setup['base']['oldpath']);
+        }
 
         foreach($filesInFolder as $path)
         {

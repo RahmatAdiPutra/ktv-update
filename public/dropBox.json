@@ -34,7 +34,7 @@
         }
     },
     "flag": {
-        "save": false,
+        "save": true,
         "newpath": true
     }
 }
