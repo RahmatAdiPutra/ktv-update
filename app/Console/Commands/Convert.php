@@ -22,9 +22,11 @@ class Convert extends Command
     protected $signature = 'convert:mp4
                             {--a|all-job : Run all jobs step by step}
                             {--r|rename : First step run job rename}
+                            {--R|flag-newpath : Flag newpath use for options [-a, -r]}
                             {--s|save : Second step run job save data}
-                            {--c|convert : Third step run job convert to mp4 (in the form of a shell script file)}
-                            {--m|make : Create shell script rename file to new name and original name (for backup name file)}
+                            {--S|flag-save : Flag save use for options [-a, -s]}
+                            {--c|convert : Third step run job convert to mp4}
+                            {--m|make : Create shell script for rename file to new name and original name and convert to mp4 (for backup)}
                             {--e|execute : Run shell script}';
 
     /**
@@ -55,6 +57,8 @@ class Convert extends Command
             // $setup = Setting::get('dropBox');
             $setup = json_decode(File::get(public_path('dropBox.json')), true);
             $setup['base'] = $setup[env('DROP_BOX')]['base'];
+            $setup['flag']['save'] = $this->option('flag-save');
+            $setup['flag']['newpath'] = $this->option('flag-newpath');
 
             $convert = new ConvertController();
 
@@ -86,7 +90,7 @@ class Convert extends Command
                     $this->output->writeln('Run job convert to mp4');
                     $this->convert($convert, $setup);
                 } else if ($this->option('make')) {
-                    $this->output->writeln('Create shell script rename file to new name and original name (for backup name file)');
+                    $this->output->writeln('Create shell script');
                     $this->file($convert, $setup);
                 } else if ($this->option('execute')) {
                     $this->output->writeln('Run shell script');
@@ -106,15 +110,32 @@ class Convert extends Command
         }
     }
 
+    public function save($convert, $setup)
+    {
+        $convert->save($setup, $convert->song($setup));
+    }
+
     public function file($convert, $setup)
     {
+        $convertFile = $convert->convert($setup);
         $renameFile = $convert->file($setup);
+        
+        $filepath_convert = $setup['base']['scriptpath'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'];
         $filepath_original = $setup['base']['scriptpath'].$setup['script']['name']['original'].'_'.$setup['lang'].$setup['script']['extension'];
         $filepath_newname = $setup['base']['scriptpath'].$setup['script']['name']['newname'].'_'.$setup['lang'].$setup['script']['extension'];
+
+        $commands_convert = implode("\n", $convertFile['convert']);
         $commands_original = implode("\n", $renameFile['original']);
         $commands_newname = implode("\n", $renameFile['newname']);
+
+        $this->make($filepath_convert, $commands_convert);
         $this->make($filepath_original, $commands_original);
         $this->make($filepath_newname, $commands_newname);
+    }
+
+    public function make($filepath, $commands)
+    {
+        File::put($filepath, $commands);
     }
 
     public function rename($convert, $setup)
@@ -122,28 +143,23 @@ class Convert extends Command
         $renameFile = $convert->file($setup);
         $commands = $renameFile['newname'];
         
-        foreach($commands as $command)
-        {
-            shell_exec($command);
-        }
-    }
-
-    public function save($convert, $setup)
-    {
-        $convert->save($setup, $convert->song($setup));
+        $this->executeCommand($commands);
     }
 
     public function convert($convert, $setup)
     {
         $convertFile = $convert->convert($setup);
-        $filepath = $setup['base']['scriptpath'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'];
-        $commands = implode("\n", $convertFile['convert']);
-        $this->make($filepath, $commands);
+        $commands = $convertFile['convert'];
+        
+        $this->executeCommand($commands);
     }
 
-    public function make($filepath, $commands)
+    public function executeCommand($commands)
     {
-        File::put($filepath, $commands);
+        foreach($commands as $command)
+        {
+            shell_exec($command);
+        }
     }
 
     public function executeScript($filepath)

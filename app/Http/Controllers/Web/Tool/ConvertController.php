@@ -29,29 +29,32 @@ class ConvertController extends Controller
         */
 
         // $setup = Setting::get('dropBox');
-        $setup = json_decode(File::get(public_path('dropBox.json')), true);
-        $setup['base'] = $setup[env('DROP_BOX')]['base'];
+        // $setup = json_decode(File::get(public_path('dropBox.json')), true);
+        // $setup['base'] = $setup[env('DROP_BOX')]['base'];
 
-        $file = $this->file($setup);
-        File::put($setup['base']['scriptpath'].$setup['script']['name']['original'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['original']));
-        File::put($setup['base']['scriptpath'].$setup['script']['name']['newname'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['newname']));
+        // $file = $this->file($setup);
+        // File::put($setup['base']['scriptpath'].$setup['script']['name']['original'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['original']));
+        // File::put($setup['base']['scriptpath'].$setup['script']['name']['newname'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['newname']));
         // File::put($setup['base']['scriptpath'].'song.json', json_encode($file['song']));
 
-        $save = $this->save($setup, $this->song($setup));
+        // $save = $this->save($setup, $this->song($setup));
 
-        $convert = $this->convert($setup);
-        File::put($setup['base']['scriptpath'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $convert['convert']));
+        // $convert = $this->convert($setup);
+        // File::put($setup['base']['scriptpath'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $convert['convert']));
 
         // dd($file);
         // dd($file, $convert);
-        dd($file, $save, $convert);
+        // dd($file, $save, $convert);
 
-        return 'Done';
+        // return 'Done';
     }
 
     public function file($setup)
     {
         $data = [];
+        $data['original'] = [];
+        $data['newname'] = [];
+
         if ($setup['flag']['newpath']) {
             $filesInFolder = File::allFiles($setup['base']['newpath']);
         } else {
@@ -121,7 +124,7 @@ class ConvertController extends Controller
                         $song->save();
                     }, 3);
                 } else {
-                    $data['song'][] = [
+                    $data[] = [
                         'song_genre_id' => $genre->id,
                         'song_language_id' => $lang->id,
                         'title' => $field['title'],

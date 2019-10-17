@@ -6,7 +6,7 @@
             "filepath": "hdd1/new/ind/",
             "scriptpath": "/home/cyber/public_html/sh/",
             "oldpath": "/home/cyber/public_html/new/",
-            "newpath": "/media/hdd1/new/ind/"
+            "newpath": "/home/cyber/public_html/new/mp4/"
         }
     },
     "production": {
@@ -34,7 +34,7 @@
         }
     },
     "flag": {
-        "save": true,
-        "newpath": true
+        "save": false,
+        "newpath": false
     }
 }
