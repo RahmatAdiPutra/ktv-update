@@ -54,6 +54,7 @@ class Convert extends Command
         try {
             // $setup = Setting::get('dropBox');
             $setup = json_decode(File::get(public_path('dropBox.json')), true);
+            $setup['base'] = $setup[env('DROP_BOX')]['base'];
 
             $convert = new ConvertController();
 
@@ -90,11 +91,12 @@ class Convert extends Command
                 } else if ($this->option('execute')) {
                     $this->output->writeln('Run shell script');
                     $script = $this->choice('Choose script for run ?', $setup['script']['name'], 'newname');
-                    $filepath = $setup[env('DROP_BOX')]['path']['script'].$script.'_'.$setup['lang'].$setup['script']['extension'];
+                    $filepath = $setup['base']['scriptpath'].$script.'_'.$setup['lang'].$setup['script']['extension'];
                     $this->output->writeln('Run <info>'.$filepath.'<info>');
                     $this->executeScript($filepath);
                 } else {
-                    // 
+                    $this->output->writeln('Run need a option {-a | -r | -s | -c | -m | -e}');
+                    return;
                 }
             }
             $this->line('Done....');
@@ -107,8 +109,8 @@ class Convert extends Command
     public function file($convert, $setup)
     {
         $renameFile = $convert->file($setup);
-        $filepath_original = $setup[env('DROP_BOX')]['path']['script'].$setup['script']['name']['original'].'_'.$setup['lang'].$setup['script']['extension'];
-        $filepath_newname = $setup[env('DROP_BOX')]['path']['script'].$setup['script']['name']['newname'].'_'.$setup['lang'].$setup['script']['extension'];
+        $filepath_original = $setup['base']['scriptpath'].$setup['script']['name']['original'].'_'.$setup['lang'].$setup['script']['extension'];
+        $filepath_newname = $setup['base']['scriptpath'].$setup['script']['name']['newname'].'_'.$setup['lang'].$setup['script']['extension'];
         $commands_original = implode("\n", $renameFile['original']);
         $commands_newname = implode("\n", $renameFile['newname']);
         $this->make($filepath_original, $commands_original);
@@ -134,7 +136,7 @@ class Convert extends Command
     public function convert($convert, $setup)
     {
         $convertFile = $convert->convert($setup);
-        $filepath = $setup[env('DROP_BOX')]['path']['script'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'];
+        $filepath = $setup['base']['scriptpath'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'];
         $commands = implode("\n", $convertFile['convert']);
         $this->make($filepath, $commands);
     }

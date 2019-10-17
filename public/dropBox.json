@@ -1,18 +1,20 @@
 {
     "genre": "pop",
     "lang": "indonesia",
-    "basepath": "/media/hdd1/new/ind/",
-    "filepath": "hdd1/new/ind/",
     "development": {
-        "path": {
-            "song": "/home/cyber/public_html/new/",
-            "script": "/home/cyber/public_html/sh/"
+        "base": {
+            "filepath": "hdd1/new/ind/",
+            "scriptpath": "/home/cyber/public_html/sh/",
+            "oldpath": "/home/cyber/public_html/new/",
+            "newpath": "/media/hdd1/new/ind/"
         }
     },
     "production": {
-        "path": {
-            "song": "/media/hdd2/new/Music/INDONESIA/",
-            "script": "/home/aman/convert/"
+        "base": {
+            "filepath": "hdd1/new/ind/",
+            "scriptpath": "/home/aman/convert/",
+            "oldpath": "/media/hdd2/new/Music/INDONESIA/",
+            "newpath": "/media/hdd1/new/ind/"
         }
     },
     "song": {
@@ -30,5 +32,9 @@
             "newname": "newname",
             "convert": "convert"
         }
+    },
+    "flag": {
+        "save": false,
+        "newpath": true
     }
 }
