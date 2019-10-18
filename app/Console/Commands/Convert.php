@@ -22,10 +22,10 @@ class Convert extends Command
     protected $signature = 'convert:mp4
                             {--a|all-job : Run all jobs step by step}
                             {--r|rename : First step run job rename}
-                            {--R|flag-newpath : Flag newpath use for options [-a, -r]}
                             {--s|save : Second step run job save data}
-                            {--S|flag-save : Flag save use for options [-a, -s]}
                             {--c|convert : Third step run job convert to mp4}
+                            {--N|newpath : Flag for dont use oldpath [-a -N | -r -N | -s -N | -m -N]}
+                            {--R|retrive : Flag for just retrive data [-a -R | -s -R | -a -R -N | -s -R -N]}
                             {--m|make : Create shell script for rename file to new name and original name and convert to mp4 (for backup)}
                             {--e|execute : Run shell script}';
 
@@ -57,8 +57,8 @@ class Convert extends Command
             // $setup = Setting::get('dropBox');
             $setup = json_decode(File::get(public_path('dropBox.json')), true);
             $setup['base'] = $setup[env('DROP_BOX')]['base'];
-            $setup['flag']['save'] = $this->option('flag-save');
-            $setup['flag']['newpath'] = $this->option('flag-newpath');
+            $setup['flag']['path'] = $this->option('newpath') ? false : true;
+            $setup['flag']['retrive'] = $this->option('retrive') ? false : true;
 
             $convert = new ConvertController();
 
@@ -76,10 +76,10 @@ class Convert extends Command
             } else {
                 if ($this->option('all-job')) {
                     $this->output->writeln('Run all job step by step');
-                    $this->file($convert, $setup);
-                    $this->rename($convert, $setup);
-                    $this->save($convert, $setup);
-                    $this->convert($convert, $setup);
+                    $this->file($convert, $setup); // backup original name
+                    $this->rename($convert, $setup); // rename newname
+                    $this->save($convert, $setup); // save data to DB
+                    $this->convert($convert, $setup); // convert to mp4 use ffmpeg
                 } else if ($this->option('rename')) {
                     $this->output->writeln('Run job rename');
                     $this->rename($convert, $setup);
@@ -99,7 +99,7 @@ class Convert extends Command
                     $this->output->writeln('Run <info>'.$filepath.'<info>');
                     $this->executeScript($filepath);
                 } else {
-                    $this->output->writeln('Run need a option {-a | -r | -s | -c | -m | -e}');
+                    $this->output->writeln('Run need a option [-a | -r | -s | -c | -m | -e] check --help for detail');
                     return;
                 }
             }

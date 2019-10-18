@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Web\Tool;
 
 use Illuminate\Http\Request;
-use App\Console\Commands\Convert;
 use App\Http\Controllers\Controller;
 use App\Models\Tool\Setting;
 use App\Models\Song;
@@ -11,15 +10,29 @@ use App\Models\SongGenre;
 use App\Models\SongLanguage;
 use App\Models\Tool\Song as ToolSong;
 use App\Models\Tool\SongMap;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
 class ConvertController extends Controller
 {
-    
-
     public function index(Request $request)
+    {
+        // return $this->test();
+
+        $option = $request->option;
+        $path = $request->path;
+        $retrive = $request->retrive;
+
+        if ($option) {
+            Artisan::call("convert:mp4 $option $path");
+            dd(Artisan::output());
+        }
+    }
+
+    
+    public function test()
     {
         /*
         Step job :
@@ -29,24 +42,26 @@ class ConvertController extends Controller
         */
 
         // $setup = Setting::get('dropBox');
-        // $setup = json_decode(File::get(public_path('dropBox.json')), true);
-        // $setup['base'] = $setup[env('DROP_BOX')]['base'];
+        $setup = json_decode(File::get(public_path('dropBox.json')), true);
+        $setup['base'] = $setup[env('DROP_BOX')]['base'];
+        $setup['flag']['path'] = true;
+        $setup['flag']['retrive'] = false;
 
-        // $file = $this->file($setup);
-        // File::put($setup['base']['scriptpath'].$setup['script']['name']['original'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['original']));
-        // File::put($setup['base']['scriptpath'].$setup['script']['name']['newname'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['newname']));
+        $file = $this->file($setup);
+        File::put($setup['base']['scriptpath'].$setup['script']['name']['original'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['original']));
+        File::put($setup['base']['scriptpath'].$setup['script']['name']['newname'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $file['newname']));
         // File::put($setup['base']['scriptpath'].'song.json', json_encode($file['song']));
 
-        // $save = $this->save($setup, $this->song($setup));
+        $save = $this->save($setup, $this->song($setup));
 
-        // $convert = $this->convert($setup);
-        // File::put($setup['base']['scriptpath'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $convert['convert']));
+        $convert = $this->convert($setup);
+        File::put($setup['base']['scriptpath'].$setup['script']['name']['convert'].'_'.$setup['lang'].$setup['script']['extension'], implode("\n", $convert['convert']));
 
         // dd($file);
         // dd($file, $convert);
-        // dd($file, $save, $convert);
+        dd($file, $save, $convert);
 
-        // return 'Done';
+        return 'Done';
     }
 
     public function file($setup)
@@ -55,10 +70,10 @@ class ConvertController extends Controller
         $data['original'] = [];
         $data['newname'] = [];
 
-        if ($setup['flag']['newpath']) {
-            $filesInFolder = File::allFiles($setup['base']['newpath']);
-        } else {
+        if ($setup['flag']['path']) {
             $filesInFolder = File::allFiles($setup['base']['oldpath']);
+        } else {
+            $filesInFolder = File::allFiles($setup['base']['newpath']);
         }
 
         foreach($filesInFolder as $path)
@@ -69,8 +84,9 @@ class ConvertController extends Controller
             if (count($exp) > 1) {
                 $artist = Str::title($exp[1]);
                 $filename = Str::slug($title, '_') . '-' . Str::slug($artist, '_');
+            } else if (count(explode('-', $pathinfo['filename'])) > 1) {
+                $filename = Str::lower($title);
             } else {
-                $artist = '';
                 $filename = Str::slug($title, '_');
             }
             $data['original'][] = 'mv "'.$pathinfo['dirname'].'/'.$filename.'.'.pathinfo($path, PATHINFO_EXTENSION).'" "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'"';
@@ -82,10 +98,10 @@ class ConvertController extends Controller
     public function song($setup)
     {
         $data = [];
-        if ($setup['flag']['newpath']) {
-            $filesInFolder = File::allFiles($setup['base']['newpath']);
-        } else {
+        if ($setup['flag']['path']) {
             $filesInFolder = File::allFiles($setup['base']['oldpath']);
+        } else {
+            $filesInFolder = File::allFiles($setup['base']['newpath']);
         }
 
         foreach($filesInFolder as $path)
@@ -113,7 +129,7 @@ class ConvertController extends Controller
             $data = [];
             foreach($songs as $field)
             {
-                if ($setup['flag']['save']) {
+                if ($setup['flag']['retrive']) {
                     DB::transaction(function () use ($genre, $lang, $field) {
                         $song = new ToolSong();
                         $song->song_genre_id = $genre->id;
@@ -142,6 +158,7 @@ class ConvertController extends Controller
     public function convert($setup)
     {
         $data = [];
+        $data['convert'] = [];
         $filesInFolder = File::allFiles($setup['base']['oldpath']);
         
         foreach($filesInFolder as $path)
@@ -150,7 +167,7 @@ class ConvertController extends Controller
             $result = File::exists($setup['base']['newpath'].$pathinfo['filename'].$setup['song']['extension']);
             if (in_array(Str::lower(pathinfo($path, PATHINFO_EXTENSION)), $setup['song']['allow'])) {
                 if (!$result) {
-                    $data['convert'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$setup['base']['newpath'].preg_replace("/\`/", "\`", $pathinfo['filename']).$setup['song']['extension'].'"';
+                    $data['convert'][] = 'ffmpeg -i "'.$pathinfo['dirname'].'/'.preg_replace("/\`/", "\`", $pathinfo['basename']).'" "'.$setup['base']['newpath'].preg_replace("/\`/", "\`", $pathinfo['filename']).$setup['song']['extension'].'" -y';
                 }
             } else {
                 if (!$result) {
@@ -161,7 +178,7 @@ class ConvertController extends Controller
         return $data;
     }
 
-    public function sample(Request $request)
+    public function sample()
     {
         /*
         1. ambil satu baris data tabel song_maps di database 192.168.70.64
@@ -217,12 +234,7 @@ class ConvertController extends Controller
         // return $this->responseSuccess($data);
     }
 
-    public function searchFile($filepath) {
-        $file = File::glob($filepath);
-        return $file;
-    }
-
-    public function sample1(Request $request)
+    public function sample1()
     {
         $draft = '/home/aman/convert/test.sql';
         $newname = '/home/aman/convert/newname.sh';
@@ -277,5 +289,10 @@ class ConvertController extends Controller
             $data['songs'][] = "INSERT INTO `ktv_v1`.`songs` (`song_genre_id`, `song_language_id`, `title`, `artist_label`, `file_path`, `created_at` , `updated_at`) VALUES (4, 1, \"$title\", \"$artist\", \"$file_path\", \"$date\", \"$date\");";
         }
         return $data;
+    }
+
+    public function searchFile($filepath) {
+        $file = File::glob($filepath);
+        return $file;
     }
 }

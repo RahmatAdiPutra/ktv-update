@@ -5,8 +5,8 @@
         "base": {
             "filepath": "hdd1/new/ind/",
             "scriptpath": "/home/cyber/public_html/sh/",
-            "oldpath": "/home/cyber/public_html/new/",
-            "newpath": "/home/cyber/public_html/new/mp4/"
+            "oldpath": "/home/cyber/public_html/videos/old/",
+            "newpath": "/home/cyber/public_html/videos/new/"
         }
     },
     "production": {
@@ -32,9 +32,5 @@
             "newname": "newname",
             "convert": "convert"
         }
-    },
-    "flag": {
-        "save": false,
-        "newpath": false
     }
 }
