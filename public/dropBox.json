@@ -11,10 +11,10 @@
     },
     "production": {
         "base": {
-            "filepath": "hdd1/new/ind/",
+            "filepath": "hdd1/new/eng/",
             "scriptpath": "/home/aman/convert/",
-            "oldpath": "/media/hdd2/new/Music/INDONESIA/",
-            "newpath": "/media/hdd1/new/ind/"
+            "oldpath": "/media/hdd2/new/Music/BARAT/",
+            "newpath": "/media/hdd1/new/eng/"
         }
     },
     "song": {
