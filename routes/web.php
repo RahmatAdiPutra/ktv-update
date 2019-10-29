@@ -95,6 +95,7 @@ Route::group([
 });
 
 Route::group([
+    'middleware' => ['auth'],
     'prefix' => 'youtube',
     'as' => 'youtube.',
 ],function () {
