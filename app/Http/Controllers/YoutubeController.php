@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use App\Models\Tool\Setting;
 
 class YoutubeController extends Controller
 {
     public function test(Request $request)
     {
-        // $request->refresh_token = '1//0gSEJkb0fHAiHCgYIARAAGBASNwF-L9Ir7vzyfkWB0Lw1h6jpQ2I6V6C7xkjdm1yzOVRtCnX5RRMOQcuG0-vKUj0JIgmJAT6JehQ';
+        // $request->refresh_token = Setting::get('refreshToken');
         // $request->part = 'snippet';
         // $request->order = 'viewCount';
         // $request->type = 'video';
@@ -33,6 +33,8 @@ class YoutubeController extends Controller
         // $search = $search->merge(['data' => 'req']);
         // return $this->responseSuccess($search);
         // dd(now(),now()->addHours(24));
+        $setup = Setting::get('refreshToken');
+        return $setup;
     }
 
     public function index(Request $request)
@@ -42,7 +44,7 @@ class YoutubeController extends Controller
 
     public function video(Request $request)
     {
-        $request->refresh_token = '1//0gSEJkb0fHAiHCgYIARAAGBASNwF-L9Ir7vzyfkWB0Lw1h6jpQ2I6V6C7xkjdm1yzOVRtCnX5RRMOQcuG0-vKUj0JIgmJAT6JehQ';
+        $request->refresh_token = Setting::get('refreshToken');
         $request->part = 'snippet';
         $request->order = 'viewCount';
         $request->type = 'video';
@@ -93,7 +95,9 @@ class YoutubeController extends Controller
                     'redirect_uri' => $redirect_uri
                 ]
             ])->getBody()->getContents();
-            return json_decode($response, true);
+            $data = json_decode($response, true);
+            Setting::set('refreshToken', $data['refresh_token']);
+            return $data;
         } catch (\Exception $e) {
             return $this->responseSuccess($e->getMessage());
         }
