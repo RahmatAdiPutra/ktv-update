@@ -93,3 +93,14 @@ Route::group([
         Route::get('/', 'ConvertController@index')->name('index');
     });
 });
+
+Route::group([
+    'prefix' => 'youtube',
+    'as' => 'youtube.',
+],function () {
+    Route::get('/', 'YoutubeController@index')->name('index');
+    Route::get('/test', 'YoutubeController@test')->name('test');
+    Route::get('/video', 'YoutubeController@video')->name('video');
+    Route::get('/authorize', 'YoutubeController@authorizeCode')->name('authorize');
+    Route::get('/token', 'YoutubeController@token')->name('token');
+});

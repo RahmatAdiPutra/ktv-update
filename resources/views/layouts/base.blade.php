@@ -44,6 +44,9 @@
                         <a class="nav-link" href="{{route('statistic.index')}}">Height Score</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{route('youtube.index')}}">Youtube</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{route('logout')}}">Logout</a>
                     </li>
                 </ul>
