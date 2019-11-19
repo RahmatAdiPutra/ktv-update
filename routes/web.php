@@ -24,6 +24,8 @@ Route::post('login', 'Auth\LoginController@login');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/token', 'Web\TransactionData\RoomController@listToken')->name('token-room');
+
 Route::group([
     'middleware' => ['auth'],
     'namespace' => 'Web\TransactionData',

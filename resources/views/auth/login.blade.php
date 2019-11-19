@@ -23,7 +23,7 @@
                             <label>Username</label>
                             <div class="controls">
                                 <input type="text" name="username" placeholder="Username" class="form-control"
-                                    value="{{ old('username') }}" required autofocus>
+                                    value="{{ old('username') }}" required autofocus autocomplete="off">
                             </div>
                         </div>
                         <!-- END Form Control-->

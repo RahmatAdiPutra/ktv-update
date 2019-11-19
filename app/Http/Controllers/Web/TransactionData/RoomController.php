@@ -85,4 +85,15 @@ class RoomController extends Controller
         }
         return $data;
     }
+
+    public function listToken(Request $request)
+    {
+        $query = Room::select('name as room', 'token');
+        if ($request->room) {
+            $query->where('name', 'like', '%'.$request->room);
+        }
+        $query = $query->get();
+
+        return $this->responseSuccess($query);
+    }
 }
